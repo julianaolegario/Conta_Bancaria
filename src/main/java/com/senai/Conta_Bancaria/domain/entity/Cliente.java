@@ -21,11 +21,11 @@ public class Cliente {
    @Column(nullable = false, length = 120) // tabela nao pode ser nula
    private String nome;
    @Column(nullable = false, length = 11)
-   private Long cpf;
+   private String cpf;
    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL) //um cliente pode ter varias contas
    private List<Conta> contas;
    @Column(nullable = false)
-   private Boolean ativa; // conta ativa
+   private Boolean ativo; // conta ativa
 
 
 }

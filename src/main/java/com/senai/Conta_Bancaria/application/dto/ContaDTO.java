@@ -1,5 +1,11 @@
 package com.senai.Conta_Bancaria.application.dto;
 
-public class ContaDTO {
+import java.math.BigDecimal;
+
+public record ContaDTO(
+        String numero,
+        String tipo,
+        BigDecimal saldo
+) {
 
 }
