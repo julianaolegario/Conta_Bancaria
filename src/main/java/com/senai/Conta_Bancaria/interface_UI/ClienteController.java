@@ -27,5 +27,9 @@ public class ClienteController { // o controller só vai repassar
     public ResponseEntity<List<ClienteResponseDTO>> listarClientesAtivos(){
         return ResponseEntity.ok(service.listarClientesAtivos());
     }
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<ClienteResponseDTO>buscarClienteAtivoPorCpf(@PathVariable String cpf){
+        return ResponseEntity.ok(service.buscarClienteAtivoPorCpf(cpf));
+    }
 }
 

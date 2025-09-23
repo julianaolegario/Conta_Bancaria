@@ -35,4 +35,11 @@ public class ClienteService{ // service é a camaa entre o controlador e o repos
                 .toList();
 
     }
+
+    public ClienteResponseDTO buscarClienteAtivoPorCpf(String cpf) {
+        var cliente = repository.findByCpfAndAtivoTrue(cpf).orElseThrow(
+                () -> new RuntimeException("Cliente não encontrado")
+        );
+        return ClienteResponseDTO.fromEntity(cliente);
+    }
 }
