@@ -15,18 +15,27 @@ import java.math.BigDecimal;
                 @UniqueConstraint(name = "uk_conta_numero", columnNames = "numero"),
                 @UniqueConstraint(name = "uk_cliente_tipo", columnNames = {"cliente_id", "tipo_conta"})
             })
+@Data
 @SuperBuilder // facilita a construcao de um objeto e é super pq é uma heranca
 @NoArgsConstructor // obrigatorio se tem o builder
 public abstract class Conta {
+
 @GeneratedValue(strategy = GenerationType.UUID)
 @Id
 private String id;
+
 @Column(nullable = false, length = 20)
 private String numero;
+
 @Column(nullable = false, precision = 4)
 private BigDecimal saldo;
-private Boolean ativo; // conta ativa
+
+@Column(nullable = false)
+private boolean ativo; // conta ativa
+
 @ManyToOne(fetch = FetchType.LAZY) // busca uma vez
 @JoinColumn(name = "cliente_id", foreignKey = @ForeignKey(name = "fk_conta_cliente"))
 private Cliente cliente;
+
+public abstract String getTipo();
 }

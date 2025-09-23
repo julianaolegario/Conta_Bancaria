@@ -6,6 +6,8 @@ import com.senai.Conta_Bancaria.domain.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service// é a cozinha, criar o cliente, permite injetalo em outros componentes
 @RequiredArgsConstructor
 
@@ -17,10 +19,20 @@ public class ClienteService{ // service é a camaa entre o controlador e o repos
         var cliente = repository.findByCpfAndAtivoTrue(dto.cpf()).orElseGet(() -> repository.save(dto.toEntity())
         );
         var contas = cliente.getContas();
-        var novaConta = dto.conta().toEntity(cliente);
+        var novaConta = dto.contaDTO().toEntity(cliente);
 
-        boolean jaTemTipo = contas.stream()
-                .anyMatch(Conta c -> c.getClass().equals(dto.conta() .getClass()) && c.isAtiva());
-        return
+        boolean jaTemTipo = contas.stream().anyMatch(
+                c -> c.getClass().equals(novaConta.getClass()) && c.isAtivo());
+        if (jaTemTipo)
+            throw new RuntimeException("Cliente já possui uma conta desse tipo");
+        cliente.getContas().add(novaConta);
+        return ClienteResponseDTO.fromEntity(repository.save(cliente));
+    }
+
+    public List<ClienteResponseDTO> listarClientesAtivos() {
+        return repository.findAllByAtivoTrue().stream()
+                .map(ClienteResponseDTO::fromEntity)
+                .toList();
+
     }
 }

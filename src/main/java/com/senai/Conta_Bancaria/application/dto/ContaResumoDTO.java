@@ -2,6 +2,8 @@ package com.senai.Conta_Bancaria.application.dto;
 
 import com.senai.Conta_Bancaria.domain.entity.Cliente;
 import com.senai.Conta_Bancaria.domain.entity.Conta;
+import com.senai.Conta_Bancaria.domain.entity.ContaCorrente;
+import com.senai.Conta_Bancaria.domain.entity.ContaPoupanca;
 
 import java.math.BigDecimal;
 
@@ -11,7 +13,30 @@ public record ContaResumoDTO(
         BigDecimal saldo
 ) {
     public Conta toEntity(Cliente cliente){
-        if ()
+        if ("CORRENTE".equalsIgnoreCase(tipo)){
+        return ContaCorrente.builder()
+                .cliente(cliente)
+                .numero(this.numero)
+                .saldo(this.saldo)
+                .ativo(true)
+                .build();
+        } else if ("POUPANCA".equalsIgnoreCase(tipo)) {
+            return ContaPoupanca.builder()
+                    .cliente(cliente)
+                    .numero(this.numero)
+                    .saldo(this.saldo)
+                    .ativo(true)
+                    .build();
+        }
         return null;
+
+    }
+
+    public static ContaResumoDTO fromEntity(Conta conta) {
+        return new ContaResumoDTO(
+                conta.getNumero(),
+                conta.getTipo(),
+                conta.getSaldo()
+        );
     }
 }

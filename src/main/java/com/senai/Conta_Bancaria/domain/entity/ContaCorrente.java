@@ -17,12 +17,16 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @DiscriminatorValue("CORRENTE")
 @EqualsAndHashCode(callSuper = true)
-
 public class ContaCorrente extends Conta {
     @Column(precision = 4)
     private BigDecimal limite;
 
     @Column(precision = 5)
     private BigDecimal taxa;
+
+    @Override
+    public String getTipo(){
+        return "CORRENTE";
+    }
 
 }
