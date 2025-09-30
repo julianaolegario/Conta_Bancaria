@@ -31,5 +31,16 @@ public class ClienteController { // o controller só vai repassar
     public ResponseEntity<ClienteResponseDTO>buscarClienteAtivoPorCpf(@PathVariable String cpf){
         return ResponseEntity.ok(service.buscarClienteAtivoPorCpf(cpf));
     }
+    @PutMapping("/{cpf}")
+    public ResponseEntity<ClienteResponseDTO> atualizarCliente(@PathVariable String cpf,
+                                                               @RequestBody ClienteAtualizadoDTO dto) {
+        return ResponseEntity.ok(service.atualizarCliente(cpf, dto));
+    }
+
+    @DeleteMapping("/{cpf}")
+    public ResponseEntity<Void> deletarCliente(@PathVariable String cpf) {
+        service.deletarCliente(cpf);
+        return ResponseEntity.noContent().build();
+    }
 }
 

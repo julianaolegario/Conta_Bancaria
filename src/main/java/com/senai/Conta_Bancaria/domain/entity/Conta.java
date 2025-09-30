@@ -31,11 +31,32 @@ private String numero;
 private BigDecimal saldo;
 
 @Column(nullable = false)
-private boolean ativo; // conta ativa
+private boolean ativa; // conta ativa
 
 @ManyToOne(fetch = FetchType.LAZY) // busca uma vez
 @JoinColumn(name = "cliente_id", foreignKey = @ForeignKey(name = "fk_conta_cliente"))
 private Cliente cliente;
 
 public abstract String getTipo();
+
+public void sacar(BigDecimal valor){
+    if(valor.compareTo(BigDecimal.ZERO) <= 0){
+        throw new IllegalArgumentException("O valor de saque deve ser positivo.");
+    }
+    if (valor.compareTo(saldo) >0) {
+    throw new IllegalArgumentException("Saldo insuficiente para saque");
+    }
+    saldo = saldo.subtract(valor);
+}
+
+    public void depositar(BigDecimal valor) {
+        validarValorMaiorQueZero(valor);
+        saldo = saldo.subtract(valor);
+    }
+
+    private static void validarValorMaiorQueZero(BigDecimal valor) {
+        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("O valor do deposito deve ser positivo")
+        }
+    }
 }

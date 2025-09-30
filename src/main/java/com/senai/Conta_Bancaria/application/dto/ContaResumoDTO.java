@@ -18,14 +18,14 @@ public record ContaResumoDTO(
                 .cliente(cliente)
                 .numero(this.numero)
                 .saldo(this.saldo)
-                .ativo(true)
+                .ativa(true)
                 .build();
         } else if ("POUPANCA".equalsIgnoreCase(tipo)) {
             return ContaPoupanca.builder()
                     .cliente(cliente)
                     .numero(this.numero)
                     .saldo(this.saldo)
-                    .ativo(true)
+                    .ativa(true)
                     .build();
         }
         return null;

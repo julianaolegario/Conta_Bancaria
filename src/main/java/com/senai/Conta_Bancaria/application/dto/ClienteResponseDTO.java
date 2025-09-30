@@ -11,7 +11,9 @@ public record ClienteResponseDTO(
         List<ContaResumoDTO> contas // aqui vai vir o numero, cpf e a conta
 ) {
     public static ClienteResponseDTO fromEntity(Cliente cliente) {
-        List<ContaResumoDTO> contas = cliente.getContas().stream().map(ContaResumoDTO::fromEntity).toList();
+        List<ContaResumoDTO> contas = cliente.getContas().stream()
+                .map(ContaResumoDTO::fromEntity)
+                .toList();
         return new ClienteResponseDTO(
                 cliente.getId(),
                 cliente.getNome(),
