@@ -27,7 +27,7 @@ private String id;
 @Column(nullable = false, length = 20)
 private String numero;
 
-@Column(nullable = false, precision = 4)
+@Column(nullable = false, precision = 19, scale = 2)
 private BigDecimal saldo;
 
 @Column(nullable = false)
@@ -40,23 +40,21 @@ private Cliente cliente;
 public abstract String getTipo();
 
 public void sacar(BigDecimal valor){
-    if(valor.compareTo(BigDecimal.ZERO) <= 0){
-        throw new IllegalArgumentException("O valor de saque deve ser positivo.");
-    }
-    if (valor.compareTo(saldo) >0) {
-    throw new IllegalArgumentException("Saldo insuficiente para saque");
+    validarValorMaiorQueZero(valor);
+    if (valor.compareTo(saldo) > 0) {
+        throw new IllegalArgumentException("Saldo insuficiente para saque.");
     }
     saldo = saldo.subtract(valor);
 }
 
     public void depositar(BigDecimal valor) {
         validarValorMaiorQueZero(valor);
-        saldo = saldo.subtract(valor);
+        saldo = saldo.add(valor);
     }
 
-    private static void validarValorMaiorQueZero(BigDecimal valor) {
+    protected static void validarValorMaiorQueZero(BigDecimal valor) {
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("O valor do deposito deve ser positivo")
+            throw new IllegalArgumentException("O valor do deposito deve ser positivo");
         }
     }
 }

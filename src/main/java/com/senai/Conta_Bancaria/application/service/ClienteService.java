@@ -15,6 +15,7 @@ import java.util.List;
 public class ClienteService{ // service é a camaa entre o controlador e o repository, fornece servicos que podem ser reutilizados por outras partes da aplicação
 
     private final ClienteRepository repository;
+
     public ClienteResponseDTO registrarCliente(ClienteRegistroDTO dto){
 
         var cliente = repository.findByCpfAndAtivoTrue(dto.cpf()).orElseGet(() -> repository.save(dto.toEntity())
@@ -26,6 +27,7 @@ public class ClienteService{ // service é a camaa entre o controlador e o repos
                 .anyMatch(c -> c.getClass().equals(novaConta.getClass()) && c.isAtiva());
         if (jaTemTipo)
             throw new RuntimeException("Cliente já possui uma conta desse tipo");
+
         cliente.getContas().add(novaConta);
         return ClienteResponseDTO.fromEntity(repository.save(cliente));
     }

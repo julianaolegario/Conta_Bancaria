@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = true)
 public class ContaPoupanca extends Conta{
 
-    @Column(precision = 5)
+    @Column(precision = 19, scale = 2)
     private BigDecimal rendimento;
 
 

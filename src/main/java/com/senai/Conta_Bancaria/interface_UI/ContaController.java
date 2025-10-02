@@ -29,28 +29,29 @@ public class ContaController {
     @PutMapping("/{numeroDaConta}")
     public ResponseEntity<ContaResumoDTO>atualizarConta(@PathVariable String numeroDaConta,
                                                         @RequestBody ContaAtualizacaoDTO dto) {
-        return ResponseEntity.ok(service.atualizarConta(numeroDaConta, dto));
+        return ResponseEntity.ok(service.atualizarConta(numeroDaConta,dto));
     }
     @DeleteMapping("/{numeroDaConta}")
     public ResponseEntity<Void> deletarConta(@PathVariable String numeroDaConta){
         service.deletarConta(numeroDaConta);
         return ResponseEntity.noContent().build();
     }
-    @PutMapping("/{numeroDaConta}/sacar")
+    @PostMapping("/{numeroDaConta}/sacar")
     public ResponseEntity<ContaResumoDTO> sacar(@PathVariable String numeroDaConta,
                                                 @RequestBody ValorSaqueDepositoDTO dto) {
         return ResponseEntity.ok(service.sacar(numeroDaConta, dto));
     }
-    @PutMapping("/{numeroDaConta}/depositar")
+    @PostMapping("/{numeroDaConta}/depositar")
     public ResponseEntity<ContaResumoDTO> depositar(@PathVariable String numeroDaConta,
-                                                    @RequestBody ValorSaqueDepositoDTO dto)
+                                                    @RequestBody ValorSaqueDepositoDTO dto){
         return ResponseEntity.ok(service.depositar(numeroDaConta, dto));
     }
-    @PutMapping("/{numeroDaConta}/ transferir")
+    @PostMapping("/{numeroDaConta}/ transferir")
     public ResponseEntity<ContaResumoDTO> transferir(@PathVariable String numeroDaConta,
                                                      @RequestBody TransferenciaDTO dto) {
     return ResponseEntity.ok(service.transferir(numeroDaConta, dto));
     }
+    }
 
 
-}
+
