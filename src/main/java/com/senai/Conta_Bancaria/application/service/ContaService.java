@@ -4,6 +4,8 @@ import com.senai.Conta_Bancaria.application.dto.*;
 import com.senai.Conta_Bancaria.domain.entity.Conta;
 import com.senai.Conta_Bancaria.domain.entity.ContaCorrente;
 import com.senai.Conta_Bancaria.domain.entity.ContaPoupanca;
+import com.senai.Conta_Bancaria.domain.exception.RendimentoInvalidoException;
+import com.senai.Conta_Bancaria.domain.exception.TipoDeContaInvalidaException;
 import com.senai.Conta_Bancaria.domain.repository.ContaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,7 +43,7 @@ public class ContaService {
             corrente.setLimite(dto.limite());
             corrente.setTaxa(dto.taxa());
         } else {
-            throw new RuntimeException("Tipo de conta inválido");
+            throw new TipoDeContaInvalidaException(conta.getTipo());
         }
         conta.setSaldo(dto.saldo());
 
@@ -69,8 +71,7 @@ public class ContaService {
         Conta contaOrigem = buscarContaAtivaPorNumero(numeroDaConta);
         Conta contaDestino = buscarContaAtivaPorNumero(dto.contaDestino());
 
-        contaOrigem.sacar(dto.valor());
-        contaDestino.depositar(dto.valor());
+        contaOrigem.transferir(dto.valor(), contaDestino);
 
         repository.save(contaDestino);
         return ContaResumoDTO.fromEntity(repository.save(contaOrigem));
@@ -81,4 +82,12 @@ public class ContaService {
     }
 
 
+    public ContaResumoDTO aplicarRendimento(String numeroDaConta) {
+        Conta conta = buscarContaAtivaPorNumero(numeroDaConta);
+        if (conta instanceof ContaPoupanca poupanca){
+            poupanca.aplicarRendimento();
+            return ContaResumoDTO.fromEntity(repository.save(poupanca));
+        }
+        throw new RendimentoInvalidoException();
+    }
 }

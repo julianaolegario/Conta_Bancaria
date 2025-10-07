@@ -1,4 +1,4 @@
-package com.senai.Conta_Bancaria.interface_UI;
+package com.senai.Conta_Bancaria.interface_UI.controller;
 
 import com.senai.Conta_Bancaria.application.dto.ContaAtualizacaoDTO;
 import com.senai.Conta_Bancaria.application.dto.ContaResumoDTO;
@@ -50,6 +50,10 @@ public class ContaController {
     public ResponseEntity<ContaResumoDTO> transferir(@PathVariable String numeroDaConta,
                                                      @RequestBody TransferenciaDTO dto) {
     return ResponseEntity.ok(service.transferir(numeroDaConta, dto));
+    }
+    @PostMapping("/{numeroDaConta}/ rendimento")
+    public ResponseEntity<ContaResumoDTO> aplicarRendimento(@PathVariable String numeroDaConta){
+        return ResponseEntity.ok(service.aplicarRendimento(numeroDaConta));
     }
     }
 

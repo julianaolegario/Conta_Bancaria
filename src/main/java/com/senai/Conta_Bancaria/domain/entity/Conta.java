@@ -1,5 +1,8 @@
 package com.senai.Conta_Bancaria.domain.entity;
 
+import com.senai.Conta_Bancaria.domain.exception.SaldoInsuficienteException;
+import com.senai.Conta_Bancaria.domain.exception.TransferirParaMesmaContaException;
+import com.senai.Conta_Bancaria.domain.exception.ValoresNegativosException;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,21 +43,29 @@ private Cliente cliente;
 public abstract String getTipo();
 
 public void sacar(BigDecimal valor){
-    validarValorMaiorQueZero(valor);
+    validarValorMaiorQueZero(valor, "saque");
     if (valor.compareTo(saldo) > 0) {
-        throw new IllegalArgumentException("Saldo insuficiente para saque.");
+        throw new SaldoInsuficienteException("saque.");
     }
     saldo = saldo.subtract(valor);
 }
 
     public void depositar(BigDecimal valor) {
-        validarValorMaiorQueZero(valor);
+        validarValorMaiorQueZero(valor, "deposito");
         saldo = saldo.add(valor);
     }
 
-    protected static void validarValorMaiorQueZero(BigDecimal valor) {
+    protected static void validarValorMaiorQueZero(BigDecimal valor, String operacao) {
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("O valor do deposito deve ser positivo");
+            throw new ValoresNegativosException(operacao);
         }
+    }
+    public void transferir(BigDecimal valor, Conta contaDestino) {
+        if (this.id.equals(contaDestino.getId())) {
+            throw new TransferirParaMesmaContaException();
+        }
+
+        this.sacar(valor);
+        contaDestino.depositar(valor);
     }
 }

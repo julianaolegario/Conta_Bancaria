@@ -1,4 +1,4 @@
-package com.senai.Conta_Bancaria.interface_UI;
+package com.senai.Conta_Bancaria.interface_UI.controller;
 
 import com.senai.Conta_Bancaria.application.dto.ClienteAtualizadoDTO;
 import com.senai.Conta_Bancaria.application.dto.ClienteRegistroDTO;
@@ -14,7 +14,7 @@ import java.util.List;
 @RestController // controlador que trata requisicoes e responde com dados diretamente
 @RequestMapping("/api/cliente")
 @RequiredArgsConstructor// ve todos os atributos que sao "final", precisam de construtor  e ja cria
-public class ClienteController { // o controller só vai repassar
+public class ClienteController { //  O CONTROLER RECEBE A REQUISICAO REST E DIRECIONA PARA O MAP QUE VAI SER TRATADO, o controller só vai repassar
 
     private final ClienteService service;
 
