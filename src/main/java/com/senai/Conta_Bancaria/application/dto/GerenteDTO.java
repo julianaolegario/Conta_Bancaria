@@ -1,5 +1,7 @@
 package com.senai.Conta_Bancaria.application.dto;
 
+import com.senai.Conta_Bancaria.domain.entity.Gerente;
+import com.senai.Conta_Bancaria.domain.enums.Role;
 import lombok.Builder;
 
 @Builder
@@ -11,7 +13,7 @@ public record GerenteDTO(
         String senha,
         Boolean ativo,
         Role role
-) {
+){
     public static GerenteDTO fromEntity(Gerente gerente) {
         return GerenteDTO.builder()
                 .id(gerente.getId())
@@ -21,7 +23,8 @@ public record GerenteDTO(
                 .ativo(gerente.isAtivo())
                 .role(gerente.getRole())
                 .build();
-}
+    }
+
     public Gerente toEntity() {
         return Gerente.builder()
                 .id(this.id)
@@ -33,5 +36,4 @@ public record GerenteDTO(
                 .role(this.role != null ? this.role : Role.GERENTE)
                 .build();
     }
-
 }

@@ -8,6 +8,7 @@ import com.senai.Conta_Bancaria.domain.exception.RendimentoInvalidoException;
 import com.senai.Conta_Bancaria.domain.exception.TipoDeContaInvalidaException;
 import com.senai.Conta_Bancaria.domain.repository.ContaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,6 +28,7 @@ public class ContaService {
     }
 
     @Transactional(readOnly = true)
+    @PreAuthorize("hasAnyRole('ADMIN','GERENTE')")
     public ContaResumoDTO buscarContaPorNumero(String numero) {
         return ContaResumoDTO.fromEntity(
                 repository.findByNumeroAndAtivaTrue(numero)
