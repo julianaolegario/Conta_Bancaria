@@ -7,6 +7,7 @@ import com.senai.Conta_Bancaria.domain.entity.Cliente;
 import com.senai.Conta_Bancaria.domain.exception.ContaMesmoTipoException;
 import com.senai.Conta_Bancaria.domain.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 public class ClienteService{ // service é a camaa entre o controlador e o repository, fornece servicos que podem ser reutilizados por outras partes da aplicação
 
     private final ClienteRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
     public ClienteResponseDTO registrarCliente(ClienteRegistroDTO dto){
 
@@ -31,6 +33,7 @@ public class ClienteService{ // service é a camaa entre o controlador e o repos
             throw new ContaMesmoTipoException();
 
         cliente.getContas().add(novaConta);
+        cliente.setSenha(passwordEncoder.)
         return ClienteResponseDTO.fromEntity(repository.save(cliente));
     }
 
