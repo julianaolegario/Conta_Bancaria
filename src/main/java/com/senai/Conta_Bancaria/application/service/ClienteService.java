@@ -7,6 +7,7 @@ import com.senai.Conta_Bancaria.domain.entity.Cliente;
 import com.senai.Conta_Bancaria.domain.exception.ContaMesmoTipoException;
 import com.senai.Conta_Bancaria.domain.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ public class ClienteService{ // service é a camaa entre o controlador e o repos
     private final ClienteRepository repository;
     private final PasswordEncoder passwordEncoder;
 
+
+    @PreAuthorize("hasAnyRole ('GERENTE', 'ADMIN')") // especifica que só o gerente pode registrar o cliente
     public ClienteResponseDTO registrarCliente(ClienteRegistroDTO dto){
 
         var cliente = repository.findByCpfAndAtivoTrue(dto.cpf()).orElseGet(() -> repository.save(dto.toEntity())
@@ -33,21 +36,25 @@ public class ClienteService{ // service é a camaa entre o controlador e o repos
             throw new ContaMesmoTipoException();
 
         cliente.getContas().add(novaConta);
-        cliente.setSenha(passwordEncoder.)
+        cliente.setSenha(passwordEncoder.encode(dto.senha()));
+
         return ClienteResponseDTO.fromEntity(repository.save(cliente));
     }
 
+    @PreAuthorize("hasAnyRole('GERENTE', 'ADMIN')") // especifica que só o gerente pode listar clientes ativos
     public List<ClienteResponseDTO> listarClientesAtivos() {
         return repository.findAllByAtivoTrue().stream()
                 .map(ClienteResponseDTO::fromEntity)
                 .toList();
 
     }
+    @PreAuthorize("hasAnyRole ('GERENTE', 'ADMIN')") // especifica que só o gerente pode buscar cliente ativo por cpf
     public ClienteResponseDTO buscarClienteAtivoPorCpf(String cpf) {
         var cliente = buscarClientePorCpfEAtivo(cpf);
         return ClienteResponseDTO.fromEntity(cliente);
     }
 
+    @PreAuthorize("hasAnyRole ('GERENTE', 'ADMIN')") // especifica que só o gerente pode
     private Cliente buscarClientePorCpfEAtivo(String cpf) {
         var cliente = repository.findByCpfAndAtivoTrue(cpf).orElseThrow(
                 () -> new RuntimeException("Cliente não encontrado.")
@@ -55,6 +62,7 @@ public class ClienteService{ // service é a camaa entre o controlador e o repos
         return cliente;
     }
 
+    @PreAuthorize("hasAnyRole ('GERENTE', 'ADMIN')") // especifica que só o gerente pode atualizar cliente
     public ClienteResponseDTO atualizarCliente(String cpf, ClienteAtualizadoDTO dto) {
         var cliente = buscarClientePorCpfEAtivo(cpf);
 
@@ -64,6 +72,7 @@ public class ClienteService{ // service é a camaa entre o controlador e o repos
         return ClienteResponseDTO.fromEntity(repository.save(cliente));
     }
 
+    @PreAuthorize("hasAnyRole ('GERENTE', 'ADMIN')") // especifica que só o gerente pode deletar o  cliente
     public void deletarCliente(String cpf) {
         var cliente = buscarClientePorCpfEAtivo(cpf);
         cliente.setAtivo(false);

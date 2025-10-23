@@ -21,6 +21,7 @@ import java.util.List;
 public class ContaService {
     private final ContaRepository repository;
 
+    @PreAuthorize("hasAnyRole ('ADMIN','GERENTE', 'CLIENTE')")
     @Transactional(readOnly = true)
     public List<ContaResumoDTO> listarTodasContas() {
         return repository.findAllByAtivaTrue().stream()
@@ -28,13 +29,14 @@ public class ContaService {
     }
 
     @Transactional(readOnly = true)
-    @PreAuthorize("hasAnyRole('ADMIN','GERENTE')")
+    @PreAuthorize("hasAnyRole('GERENTE', 'ADMIN')")
     public ContaResumoDTO buscarContaPorNumero(String numero) {
         return ContaResumoDTO.fromEntity(
                 repository.findByNumeroAndAtivaTrue(numero)
                         .orElseThrow(() -> new RuntimeException("Conta não encontrada"))
         );
     }
+    @PreAuthorize("hasAnyRole('GERENTE', 'ADMIN')")
     public ContaResumoDTO atualizarConta(String numeroDaConta, ContaAtualizacaoDTO dto){
         Conta conta = repository.findByNumeroAndAtivaTrue(numeroDaConta)
                 .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
@@ -51,24 +53,28 @@ public class ContaService {
 
         return ContaResumoDTO.fromEntity(repository.save(conta));
     }
+    @PreAuthorize("hasAnyRole('GERENTE', 'ADMIN')")
     public void deletarConta(String numeroDaConta){
         Conta conta = repository.findByNumeroAndAtivaTrue(numeroDaConta)
                 .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
         conta.setAtiva(false);
         repository.save(conta);
     }
+    @PreAuthorize("hasAnyRole('CLIENTE')")
     public ContaResumoDTO sacar(String numeroDaConta, ValorSaqueDepositoDTO dto) {
         Conta conta = buscarContaAtivaPorNumero(numeroDaConta);
 
         conta.sacar(dto.valor());
         return ContaResumoDTO.fromEntity(repository.save(conta));
     }
+    @PreAuthorize("hasAnyRole('CLIENTE')")
     public ContaResumoDTO depositar(String numeroDaConta, ValorSaqueDepositoDTO dto) {
         Conta conta = buscarContaAtivaPorNumero(numeroDaConta);
 
         conta.depositar(dto.valor());
         return ContaResumoDTO.fromEntity(repository.save(conta));
     }
+    @PreAuthorize("hasAnyRole('CLIENTE')")
     public ContaResumoDTO transferir(String numeroDaConta, TransferenciaDTO dto){
         Conta contaOrigem = buscarContaAtivaPorNumero(numeroDaConta);
         Conta contaDestino = buscarContaAtivaPorNumero(dto.contaDestino());
@@ -78,12 +84,13 @@ public class ContaService {
         repository.save(contaDestino);
         return ContaResumoDTO.fromEntity(repository.save(contaOrigem));
     }
+    @PreAuthorize("hasAnyRole('CLIENTE','GERENTE', 'ADMIN')")
     private Conta buscarContaAtivaPorNumero(String numero){
         return repository.findByNumeroAndAtivaTrue(numero)
                 .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
     }
 
-
+    @PreAuthorize("hasAnyRole('GERENTE', 'ADMIN')")
     public ContaResumoDTO aplicarRendimento(String numeroDaConta) {
         Conta conta = buscarContaAtivaPorNumero(numeroDaConta);
         if (conta instanceof ContaPoupanca poupanca){

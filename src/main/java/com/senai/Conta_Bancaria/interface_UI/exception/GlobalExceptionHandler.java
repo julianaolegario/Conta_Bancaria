@@ -33,10 +33,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleContaMesmoTipo (ContaMesmoTipoException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException (Exception ex){
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<String> handleException (Exception ex){
+//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail badRequest(MethodArgumentNotValidException ex, HttpServletRequest request) {
         ProblemDetail problem = ProblemDetailUtils.buildProblem(

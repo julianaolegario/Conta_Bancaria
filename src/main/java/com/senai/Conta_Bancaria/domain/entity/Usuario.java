@@ -17,13 +17,18 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
+@Table (name = "usuario",//especifica os itens que tem na tabela, modela melhor oq tem nela
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "cpf") // cpf é unico
+        }
+)
 public abstract class Usuario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Id // indica que é uma chave primaria
+    @GeneratedValue(strategy = GenerationType.UUID) // gera automaticamente como idenificador universal
     protected String id;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(nullable = false) // tabela nao pode ser nula
     protected String nome;
 
     @NotBlank
