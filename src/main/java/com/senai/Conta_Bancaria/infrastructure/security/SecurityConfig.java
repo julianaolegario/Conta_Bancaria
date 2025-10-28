@@ -27,8 +27,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**","/swagger-ui/**","/v3/api-docs/**").permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/api/cliente/**").hasAnyRole("CLIENTE","GERENTE")
-                        .requestMatchers(HttpMethod.GET, "/gerentes").hasAnyRole("GERENTE")
+                        .requestMatchers(HttpMethod.POST, "/api/cliente/**").hasAnyRole("ADMIN","GERENTE")
+                        .requestMatchers(HttpMethod.GET, "/api/cliente").hasAnyRole("ADMIN","GERENTE")
+                        .requestMatchers(HttpMethod.PUT, "/api/cliente/**").hasAnyRole("ADMIN", "GERENTE")
+                        .requestMatchers(HttpMethod.DELETE, "/api/cliente").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/gerente").hasAnyRole("ADMIN","GERENTE") // GERENTE pode acessar os dados da área de gerência
+                        .requestMatchers(HttpMethod.POST, "/api/gerente/**").hasAnyRole("ADMIN") // Somente ADMIN pode criar ou modificar gerentes
+                        .requestMatchers(HttpMethod.PUT, "/api/gerente/**").hasAnyRole("ADMIN") // Somente ADMIN pode atualizar dados de gerentes
+                        .requestMatchers(HttpMethod.DELETE, "/api/gerente/**").hasAnyRole("ADMIN") // Somente ADMIN pode excluir gerentes
+
 
                         .anyRequest().authenticated()
                 )
