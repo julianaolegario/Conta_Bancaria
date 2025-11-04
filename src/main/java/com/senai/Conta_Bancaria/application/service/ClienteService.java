@@ -1,6 +1,5 @@
 package com.senai.Conta_Bancaria.application.service;
 
-import com.senai.Conta_Bancaria.application.dto.ClienteAtualizadoDTO;
 import com.senai.Conta_Bancaria.application.dto.ClienteRegistroDTO;
 import com.senai.Conta_Bancaria.application.dto.ClienteResponseDTO;
 import com.senai.Conta_Bancaria.domain.entity.Cliente;
@@ -23,7 +22,7 @@ public class ClienteService{ // service é a camaa entre o controlador e o repos
 
 
     @PreAuthorize("hasAnyRole ('GERENTE', 'ADMIN')") // especifica que só o gerente pode registrar o cliente
-    public ClienteResponseDTO registrarCliente(ClienteRegistroDTO dto){
+    public ClienteResponseDTO registrarClienteOuAnexarConta(ClienteRegistroDTO dto){
 
         var cliente = repository.findByCpfAndAtivoTrue(dto.cpf()).orElseGet(() -> repository.save(dto.toEntity())
         );
@@ -63,7 +62,7 @@ public class ClienteService{ // service é a camaa entre o controlador e o repos
     }
 
     @PreAuthorize("hasAnyRole ('GERENTE', 'ADMIN')") // especifica que só o gerente pode atualizar cliente
-    public ClienteResponseDTO atualizarCliente(String cpf, ClienteAtualizadoDTO dto) {
+    public ClienteResponseDTO atualizarCliente(String cpf, ClienteRegistroDTO dto) {
         var cliente = buscarClientePorCpfEAtivo(cpf);
 
         cliente.setNome(dto.nome());
