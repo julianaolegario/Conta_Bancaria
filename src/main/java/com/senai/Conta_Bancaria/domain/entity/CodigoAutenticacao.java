@@ -11,7 +11,7 @@ public class CodigoAutenticacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Identificador único
+    private String id; // Identificador único
 
     @Column(nullable = false, unique = true, length = 100)
     private String codigo; // Código gerado para autenticação
@@ -20,7 +20,7 @@ public class CodigoAutenticacao {
     private LocalDateTime expiraEm; // Data e hora de expiração do código
 
     @Column(nullable = false)
-    private Boolean validado; // Indica se o código foi validado (true/false)
+    private boolean validado; // Indica se o código foi validado (true/false)
 
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)

@@ -14,7 +14,7 @@ public class Pagamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Identificador único
+    private String id; // Identificador único
 
     @ManyToOne
     @JoinColumn(name = "conta_id", nullable = false) // Relacionamento com a Conta
@@ -27,11 +27,11 @@ public class Pagamento {
     private BigDecimal valorPago; // Valor principal do pagamento
 
     @Column(nullable = false)
-    String dataPagamento; // Data e hora do pagamento
+     private String dataPagamento; // Data e hora do pagamento
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    Enum status; // Estado do pagamento (SUCESSO, FALHA, etc.)
+    private Enum status; // Estado do pagamento (SUCESSO, FALHA, etc.)
 
     @ManyToMany
     @JoinTable(
