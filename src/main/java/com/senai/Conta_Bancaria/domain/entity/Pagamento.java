@@ -1,11 +1,14 @@
 package com.senai.Conta_Bancaria.domain.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.security.core.parameters.P;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,26 +23,27 @@ public class Pagamento {
     @JoinColumn(name = "conta_id", nullable = false) // Relacionamento com a Conta
     private Conta conta;
 
-    @Column(nullable = false)
+    @NotBlank
     private String boleto; // Identificador do boleto ou referência do serviço
 
-    @Column(nullable = false)
+    @NotNull
     private BigDecimal valorPago; // Valor principal do pagamento
 
-    @Column(nullable = false)
-     private String dataPagamento; // Data e hora do pagamento
+    @NotNull
+    private String dataPagamento; // Data e hora do pagamento
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @NotNull
     private Enum status; // Estado do pagamento (SUCESSO, FALHA, etc.)
 
+
+    @NotNull
     @ManyToMany
     @JoinTable(
             name = "pagamento_taxa",
             joinColumns = @JoinColumn(name = "pagamento_id"),
             inverseJoinColumns = @JoinColumn(name = "taxa_id")
     )
-    private Set<Taxa> taxas; // Relacionamento com as taxas aplicadas
+    protected List<Taxa> taxas; // Relacionamento com as taxas aplicadas
 
 }
 
