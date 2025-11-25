@@ -30,20 +30,14 @@ public class Pagamento {
     private BigDecimal valorPago; // Valor principal do pagamento
 
     @NotNull
-    private String dataPagamento; // Data e hora do pagamento
+    private LocalDateTime dataPagamento; // Data e hora do pagamento
 
     @NotNull
-    private Enum status; // Estado do pagamento (SUCESSO, FALHA, etc.)
+    private StatusPagamneto status; // Estado do pagamento (SUCESSO, FALHA, etc.)
 
 
     @NotNull
-    @ManyToMany
-    @JoinTable(
-            name = "pagamento_taxa",
-            joinColumns = @JoinColumn(name = "pagamento_id"),
-            inverseJoinColumns = @JoinColumn(name = "taxa_id")
-    )
-    protected List<Taxa> taxas; // Relacionamento com as taxas aplicadas
+    List<Taxa> taxas; // Relacionamento com as taxas aplicadas
 
 }
 

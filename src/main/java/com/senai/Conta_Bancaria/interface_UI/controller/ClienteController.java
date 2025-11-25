@@ -38,9 +38,9 @@ public class ClienteController {
                             examples = @ExampleObject(name = "Exemplo válido", value = """
                                         {
                                           "id": 1,
-                                          "nome": "João Silva",
+                                          "nome": "Juliana",
                                           "cpf": "123.456.789-00",
-                                          "email": "joao@gmail.com",
+                                          "email": "juliana@gmail.com",
                                           "senha": "senhaSegura123"
                                         }
                                     """
@@ -117,9 +117,9 @@ public class ClienteController {
                             examples = @ExampleObject(name = "Exemplo de atualização", value = """
                         {
                           "id": 1,
-                          "nome": "João Silva",
+                          "nome": "Juliana Santos",
                           "cpf": "123.456.789-00",
-                          "email": josilva@gmail.com",
+                          "email": juliana@gmail.com",
                           "senha": "novaSenhaSegura123"
                         }
                     """)

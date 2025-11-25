@@ -1,5 +1,6 @@
 package com.senai.Conta_Bancaria.interface_UI.exception;
 
+import com.senai.Conta_Bancaria.domain.exception.AutenticacaoIoTExpiradaException;
 import com.senai.Conta_Bancaria.domain.exception.PagamentoInvalidoException;
 import com.senai.Conta_Bancaria.domain.exception.SaldoInsuficienteException;
 import com.senai.Conta_Bancaria.domain.exception.TaxaInvalidaException;

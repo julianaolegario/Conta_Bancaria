@@ -29,7 +29,7 @@ public class PagamentoDomainService {
 
     public void validarSaldo(Conta conta, BigDecimal total) {
         if (conta.getSaldo().compareTo(total) < 0) {
-            throw new SaldoInsuficienteException();
+            throw new SaldoInsuficienteException("saque insuficiente");
         }
     }
 
