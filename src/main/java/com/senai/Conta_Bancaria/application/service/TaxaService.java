@@ -6,9 +6,7 @@ import com.senai.Conta_Bancaria.domain.entity.Taxa;
 import com.senai.Conta_Bancaria.domain.exception.EntidadeNaoEncontradaException;
 import com.senai.Conta_Bancaria.domain.repository.TaxaRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,7 +34,7 @@ public class TaxaService {
 
     }
 
-    private Taxa buscarTaxaPorId(String id) {
+    public Taxa buscarTaxaPorId(String id) {
 
         return repository.findById(id).orElseThrow(
                 () -> new EntidadeNaoEncontradaException("Taxa com ID " + id)

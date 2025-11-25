@@ -1,15 +1,20 @@
 package com.senai.Conta_Bancaria.interface_UI.exception;
 
+import ch.qos.logback.core.status.Status;
 import com.senai.Conta_Bancaria.domain.exception.AutenticacaoIoTExpiradaException;
 import com.senai.Conta_Bancaria.domain.exception.PagamentoInvalidoException;
 import com.senai.Conta_Bancaria.domain.exception.SaldoInsuficienteException;
 import com.senai.Conta_Bancaria.domain.exception.TaxaInvalidaException;
+import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+@RestControllerAdvice
 public class ApiExceptionHandler {
+
     @ExceptionHandler(TaxaInvalidaException.class)
     public ResponseEntity<Object> handleTaxaInvalida(TaxaInvalidaException ex, WebRequest request) {
         return buildProblemDetail(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -31,7 +36,12 @@ public class ApiExceptionHandler {
     }
 
     private ResponseEntity<Object> buildProblemDetail(String message, HttpStatus status) {
-        AbstractThrowableProblem problem = new AbstractThrowableProblem(null, message, status, message, null, null);
+        Problem problem = Problem.builder()
+                .withTitle(status.getReasonPhrase())
+                .withStatus(Status.valueOf(status.value()))
+                .withDetail(message)
+                .build();
+
         return new ResponseEntity<>(problem, status);
     }
 }
