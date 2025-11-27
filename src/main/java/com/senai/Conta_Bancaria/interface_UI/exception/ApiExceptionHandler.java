@@ -7,6 +7,7 @@ import com.senai.Conta_Bancaria.domain.exception.SaldoInsuficienteException;
 import com.senai.Conta_Bancaria.domain.exception.TaxaInvalidaException;
 import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -36,11 +37,9 @@ public class ApiExceptionHandler {
     }
 
     private ResponseEntity<Object> buildProblemDetail(String message, HttpStatus status) {
-        Problem problem = Problem.builder()
-                .withTitle(status.getReasonPhrase())
-                .withStatus(Status.valueOf(status.value()))
-                .withDetail(message)
-                .build();
+        ProblemDetail problem = ProblemDetail.forStatus(status);
+        problem.setTitle(status.getReasonPhrase());
+        problem.setDetail(message);
 
         return new ResponseEntity<>(problem, status);
     }

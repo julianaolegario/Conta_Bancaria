@@ -11,7 +11,7 @@ public class CodigoAutenticacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id; // Identificador único
+    private Long id; // Identificador único
 
     @Column(nullable = false, unique = true, length = 100)
     private String codigo; // Código gerado para autenticação

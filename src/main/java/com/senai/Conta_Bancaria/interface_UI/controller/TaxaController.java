@@ -1,5 +1,7 @@
 package com.senai.Conta_Bancaria.interface_UI.controller;
 
+import com.senai.Conta_Bancaria.application.dto.ClienteRegistroDTO;
+import com.senai.Conta_Bancaria.application.dto.TaxaDTO;
 import com.senai.Conta_Bancaria.application.dto.TaxaResponseDTO;
 import com.senai.Conta_Bancaria.application.service.TaxaService;
 import com.senai.Conta_Bancaria.domain.entity.Taxa;
@@ -27,7 +29,7 @@ public class TaxaController {
     @Operation(
             summary = "Cadastrar uma nova taxa",
             description = "Adiciona uma nova taxa ao banco de dados após todas as validações",
-            requestBody = @RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     required = true,
                     content = @Content(
                             schema = @Schema(implementation = ClienteRegistroDTO.class),

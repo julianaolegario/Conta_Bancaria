@@ -18,8 +18,8 @@ public record PagamentoRequestDTO (
         String valorPago,
 
         @NotNull(message = "Data do pagamento é obrigatório")
-        @Schema(description = "Informar a data do pagamento", example = "01-09-2025")
-        String dataPagamento,
+        @Schema(description = "Informar a data do pagamento", example = "11-10-2025")
+        String dataVencimento,
 
         Enum tipoPagamento
 )
