@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 
-public class TaxaService {
+public class  TaxaService {
 
     private final TaxaRepository repository;
 

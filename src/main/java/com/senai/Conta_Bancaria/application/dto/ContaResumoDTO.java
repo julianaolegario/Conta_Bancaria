@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record ContaResumoDTO(
+public record  ContaResumoDTO(
         String numero,
         String tipo,
         @NotNull(message = "O saldo não pode ser nulo")

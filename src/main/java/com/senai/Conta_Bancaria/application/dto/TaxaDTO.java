@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record  TaxaDTO(
+public record  TaxaDTO  (
         @NotBlank(message = "Descrição é obrigatória")
         @Schema(description = "Nome da taxa", example = "Tarifa Bancária")
         String descricao,

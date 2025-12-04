@@ -4,7 +4,7 @@ import com.senai.Conta_Bancaria.domain.entity.Conta;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-public record PagamentoRequestDTO (
+public record  PagamentoRequestDTO (
         @NotNull (message = "Conta é obrigatório")
         @Schema(description = "Especificar a conta", example = "Poupança")
         Conta conta,

@@ -36,6 +36,8 @@ public class ApiExceptionHandler {
         return buildProblemDetail(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
+
+
     private ResponseEntity<Object> buildProblemDetail(String message, HttpStatus status) {
         ProblemDetail problem = ProblemDetail.forStatus(status);
         problem.setTitle(status.getReasonPhrase());

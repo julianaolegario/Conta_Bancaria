@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 
-public record ClienteRegistroDTO(
+public record  ClienteRegistroDTO(
         @NotBlank(message = "O nome é obrigatório")
         String nome,
         String cpf,

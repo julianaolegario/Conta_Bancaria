@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Entity
 @Data
-public class Pagamento {
+public class  Pagamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

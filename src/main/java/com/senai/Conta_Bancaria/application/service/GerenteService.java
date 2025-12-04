@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class GerenteService {
+public class  GerenteService {
 
     private final GerenteRepository gerenteRepository;
     private final PasswordEncoder encoder;

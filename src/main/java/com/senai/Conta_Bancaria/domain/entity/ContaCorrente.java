@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @DiscriminatorValue("CORRENTE")
 @EqualsAndHashCode(callSuper = true)
-public class ContaCorrente extends Conta {
+public class  ContaCorrente extends Conta {
     @Column(precision = 19, scale = 2)
     private BigDecimal limite;
 

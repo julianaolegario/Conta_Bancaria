@@ -21,7 +21,7 @@ import java.util.List;
 @RestController //classe vai responder as requisições HTTP e retornar JSON
 @RequestMapping("/api/pagamentos")
 
-public class PagamentoController {
+public class  PagamentoController {
     private final PagamentoService pagamentoService;
 
     public PagamentoController(PagamentoService pagamentoService) {

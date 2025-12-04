@@ -22,7 +22,7 @@ import lombok.experimental.SuperBuilder;
                 @UniqueConstraint(columnNames = "cpf") // cpf é unico
         }
 )
-public abstract class Usuario {
+public abstract class  Usuario {
     @Id // indica que é uma chave primaria
     @GeneratedValue(strategy = GenerationType.IDENTITY) // gera automaticamente como idenificador universal
     protected Long id;

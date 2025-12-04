@@ -24,7 +24,7 @@ public class AuthController {
     @Operation(
             summary = "Realizar login",
             description = "Autentica um usuário e retorna um token JWT válido",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody (
                     required = true,
                     content = @Content(
                             schema = @Schema(implementation = AuthDTO.LoginRequest.class),

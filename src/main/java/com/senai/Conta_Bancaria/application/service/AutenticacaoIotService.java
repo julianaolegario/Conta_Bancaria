@@ -1,4 +1,4 @@
 package com.senai.Conta_Bancaria.application.service;
 
-public class AutenticacaoIotService {
+public class  AutenticacaoIotService {
 }

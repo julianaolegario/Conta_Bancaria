@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class AdminBootstrap implements CommandLineRunner {
+public class  AdminBootstrap implements CommandLineRunner {
 
     private final GerenteRepository gerenteRepository;
     private final PasswordEncoder passwordEncoder;

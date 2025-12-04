@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Entity
 @Data
 @SuperBuilder
-public class Taxa {
+public class  Taxa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Identificador único da taxa

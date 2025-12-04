@@ -29,6 +29,7 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
     }
+
     @ExceptionHandler(ContaMesmoTipoException.class)
     public ResponseEntity<String> handleContaMesmoTipo (ContaMesmoTipoException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);

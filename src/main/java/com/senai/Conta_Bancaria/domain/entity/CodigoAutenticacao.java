@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-public class CodigoAutenticacao {
+public class  CodigoAutenticacao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

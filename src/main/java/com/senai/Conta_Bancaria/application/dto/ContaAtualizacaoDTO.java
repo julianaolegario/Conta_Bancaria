@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record ContaAtualizacaoDTO (
+public record  ContaAtualizacaoDTO (
 
         @Schema(description = "Novo Saldo", example = "1500.00")
         BigDecimal saldo, // Para Conta

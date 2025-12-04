@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UsuarioDetailsService implements UserDetailsService {
+public class  UsuarioDetailsService implements UserDetailsService {
 
     private final UsuarioRepository repository;
 

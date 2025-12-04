@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 
-public record ClienteAtualizadoDTO(
+public record  ClienteAtualizadoDTO(
         @NotBlank(message = "Nome é obrigatório")
         String nome,
         @NotBlank(message = "CPF é obrigatório")

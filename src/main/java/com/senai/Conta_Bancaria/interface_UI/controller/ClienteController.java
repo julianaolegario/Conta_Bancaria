@@ -21,7 +21,7 @@ import java.util.List;
 @RestController //descreve oq o endpoint faz
 @RequestMapping("/api/cliente")
 @RequiredArgsConstructor
-public class ClienteController {
+public class   ClienteController {
 
 
     private final ClienteService service;

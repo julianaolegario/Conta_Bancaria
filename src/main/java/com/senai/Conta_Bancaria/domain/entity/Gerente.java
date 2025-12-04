@@ -16,7 +16,7 @@ import java.util.List;
 @SuperBuilder
 @Entity
 @Table(name = "gerentes")
-public class Gerente extends Usuario{
+public class  Gerente extends Usuario{
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "gerente_contas", joinColumns = @JoinColumn(name = "gerente_id"))

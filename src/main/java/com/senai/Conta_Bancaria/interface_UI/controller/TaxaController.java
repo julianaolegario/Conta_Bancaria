@@ -26,6 +26,7 @@ import java.util.List;
 
 public class TaxaController {
 
+
     private final TaxaService service;
 
     @Operation(

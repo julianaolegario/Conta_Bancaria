@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class DispositivoIOT {
+public class  DispositivoIOT {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Identificador único do dispositivo

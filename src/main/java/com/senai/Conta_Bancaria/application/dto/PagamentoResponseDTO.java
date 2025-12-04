@@ -4,7 +4,7 @@ import com.senai.Conta_Bancaria.domain.entity.Conta;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-public record PagamentoResponseDTO (
+public record PagamentoResponseDTO  (
         @NotNull(message = "ID do pagamento é obrigatório")
         @Schema(description = "ID do pagamento", example = "55")
         Long id,

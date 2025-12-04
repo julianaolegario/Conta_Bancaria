@@ -25,7 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/conta")
 @RequiredArgsConstructor
-public class ContaController {
+public class  ContaController {
     private final ContaService service;
 
     // ---------------- LISTAR CONTAS ----------------

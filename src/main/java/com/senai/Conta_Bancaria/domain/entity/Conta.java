@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 @Data
 @SuperBuilder // facilita a construcao de um objeto e é super pq é uma heranca
 @NoArgsConstructor // obrigatorio se tem o builder
-public abstract class Conta {
+public abstract class  Conta {
 
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 @Id

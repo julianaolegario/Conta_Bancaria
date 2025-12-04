@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @DiscriminatorValue("POUPANCA")
 @EqualsAndHashCode(callSuper = true)
-public class ContaPoupanca extends Conta{
+public class  ContaPoupanca extends Conta{
 
     @Column(precision = 19, scale = 2)
     private BigDecimal rendimento;

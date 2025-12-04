@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Service //logica de negocio
 @RequiredArgsConstructor // cria um construtor automatico
-public class PagamentoService {
+public class  PagamentoService {
 
     private final PagamentoRepository pagamentoRepository; // repository que interage com o banco de dados, vai salvar, buscar, listar e excluir pagamentos do banco
     private final TaxaService taxaService; //logica das taxas

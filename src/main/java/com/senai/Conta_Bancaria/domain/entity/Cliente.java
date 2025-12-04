@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @SuperBuilder // facilita a criacao de um objeto,posso criar aributos de forma mais simplificada
 @NoArgsConstructor
-public class Cliente extends Usuario {
+public class  Cliente extends Usuario {
    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL) //um cliente pode ter varias contas
    private List<Conta> contas;
 
