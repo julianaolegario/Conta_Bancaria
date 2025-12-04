@@ -24,8 +24,8 @@ import lombok.experimental.SuperBuilder;
 )
 public abstract class Usuario {
     @Id // indica que é uma chave primaria
-    @GeneratedValue(strategy = GenerationType.UUID) // gera automaticamente como idenificador universal
-    protected String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // gera automaticamente como idenificador universal
+    protected Long id;
 
     @NotBlank
     @Column(nullable = false) // tabela nao pode ser nula

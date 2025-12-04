@@ -17,8 +17,8 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import java.net.URI;
 import java.util.List;
 
-@Tag(name = "Clientes", description = "Gerenciamento de clientes do banco")
-@RestController
+@Tag(name = "Clientes", description = "Gerenciamento de clientes do banco") //organiza os endpoints
+@RestController //descreve oq o endpoint faz
 @RequestMapping("/api/cliente")
 @RequiredArgsConstructor
 public class ClienteController {

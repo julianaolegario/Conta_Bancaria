@@ -7,7 +7,7 @@ import java.util.List;
 
 public record ClienteResponseDTO(
         @NotBlank(message = "ID é obrigatório")
-        String id,
+        Long id,
         @NotBlank(message = "O nome é obrigatório")
         String nome,
         @NotBlank(message = "O CPF é obrigatório")
