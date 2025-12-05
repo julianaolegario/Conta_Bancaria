@@ -11,9 +11,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @Tag(name = "Autenticação", description = "Gerenciamento de login e emissao de tokens JWT ")
 @RestController
@@ -24,7 +24,7 @@ public class AuthController {
     @Operation(
             summary = "Realizar login",
             description = "Autentica um usuário e retorna um token JWT válido",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody (
+            requestBody = @RequestBody(
                     required = true,
                     content = @Content(
                             schema = @Schema(implementation = AuthDTO.LoginRequest.class),

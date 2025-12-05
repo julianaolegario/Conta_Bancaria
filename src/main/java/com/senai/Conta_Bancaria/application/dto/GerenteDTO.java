@@ -6,7 +6,7 @@ import lombok.Builder;
 
 @Builder
 public record GerenteDTO(
-        Long  id,
+        String id,
         String nome,
         String cpf,
         String email,

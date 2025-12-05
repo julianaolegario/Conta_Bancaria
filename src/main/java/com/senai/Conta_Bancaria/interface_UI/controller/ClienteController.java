@@ -110,7 +110,7 @@ public class   ClienteController {
             parameters = {
                     @Parameter(name = "CPF", description = "CPF do cliente a ser atualizado", example = "123.123.123-00")
             },
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            requestBody = @RequestBody(
                     required = true,
                     content = @Content(
                             schema = @Schema(implementation = ClienteRegistroDTO.class),

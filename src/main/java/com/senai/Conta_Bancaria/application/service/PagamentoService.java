@@ -30,28 +30,23 @@ public class  PagamentoService {
 
 
         for (TaxaResponseDTO taxa : taxas) {//coloca a taxa no valor
-
             valorTotal = valorTotal.add(valorTotal.multiply(taxa.percentual())); // coloca o percentual
-
-
             valorTotal = valorTotal.add(taxa.valorFixo()); // coloca o valor fixo da taxa
         }
-
         return valorTotal; //retorna o valor com as taxas
 
     }
-
-
     public PagamentoResponseDTO criarPagamento(PagamentoRequestDTO request) { //metodo que o controller vai chamar, recebe a requisiçaõ do cliente e responde
         Pagamento pagamento = new Pagamento();// assim cria a entidade
 
 
-
         pagamento.setConta(request.conta());
-        pagamento.setBoleto(request.boleto());
+        pagamento.setDescricaoPagamento(request.descricaoPagamento());
         pagamento.setValorPago(new BigDecimal(request.valorPago())); //converte de string para big decimal
         pagamento.setDataPagamento(LocalDateTime.parse(request.dataVencimento())); //converte string para localdatetime
         pagamento.setStatus(StatusPagamento.PENDENTE); //define o pagamento como pendente primeiro
+
+        pagamento.setTipoPagamento(request.tipoPagamento()); //define o tipo de pagamento
 
 
         Pagamento salvo = pagamentoRepository.save(pagamento); //salva no banco
@@ -60,11 +55,12 @@ public class  PagamentoService {
         return new PagamentoResponseDTO(
                 salvo.getId(),
                 salvo.getConta(),
-                salvo.getBoleto(),
+                salvo.getDescricaoPagamento(),
                 salvo.getValorPago().toString(),
                 salvo.getDataPagamento().toString()
         ); // converte a entidade para um dto de resposta, para nao expor detalhes da entidade e dar ao cliente apenas os dados necessario
     }
+
 
 
     public List<PagamentoResponseDTO> listarPagamentos() {
@@ -80,7 +76,7 @@ public class  PagamentoService {
     }// busca os pagamentos, converte em DTO, e retorna uma lista
 
 
-    public PagamentoResponseDTO buscarPagamentoPorId(Long id) {
+    public PagamentoResponseDTO buscarPagamentoPorId(String id) {
         Pagamento pagamento = pagamentoRepository.findById(id)
                 .orElseThrow(() -> new PagamentoNaoEncontradoException(id.toString())); //busca o pagamento
 
@@ -94,7 +90,7 @@ public class  PagamentoService {
     }
 
 
-    public void deletarPagamento(Long id) {
+    public void deletarPagamento(String id) {
         if (!pagamentoRepository.existsById(id)) {
             throw new PagamentoNaoEncontradoException(id.toString());
         }

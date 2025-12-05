@@ -1,6 +1,7 @@
 package com.senai.Conta_Bancaria.domain.entity;
 
 import com.senai.Conta_Bancaria.domain.enums.StatusPagamento;
+import com.senai.Conta_Bancaria.domain.enums.TipoPagamento;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,8 +19,8 @@ import java.util.Set;
 public class  Pagamento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Identificador único
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id; // Identificador único
 
     @ManyToOne
     @JoinColumn(name = "conta_id", nullable = false) // Relacionamento com a Conta
@@ -27,6 +28,9 @@ public class  Pagamento {
 
     @NotBlank
     private String boleto; // Identificador do boleto ou referência do serviço
+
+    @NotBlank
+    private String descricaoPagamento;
 
     @NotNull
     private BigDecimal valorPago; // Valor principal do pagamento
@@ -37,6 +41,10 @@ public class  Pagamento {
     @NotNull
     @Enumerated(EnumType.STRING)
     private StatusPagamento status; // Estado do pagamento (SUCESSO, FALHA, etc.)
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private TipoPagamento tipoPagamento;
 
 
     @NotNull

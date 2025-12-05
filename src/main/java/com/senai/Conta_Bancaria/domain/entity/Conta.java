@@ -23,9 +23,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor // obrigatorio se tem o builder
 public abstract class  Conta {
 
-@GeneratedValue(strategy = GenerationType.IDENTITY)
+@GeneratedValue(strategy = GenerationType.UUID)
 @Id
-private Long id;
+private String id;
 
 @Column(nullable = false, length = 20)
 private String numero;

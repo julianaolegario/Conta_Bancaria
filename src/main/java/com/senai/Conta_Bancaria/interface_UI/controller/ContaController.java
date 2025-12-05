@@ -202,7 +202,7 @@ public class  ContaController {
     @PostMapping("/{numeroDaConta}/transferir")
     public ResponseEntity<ContaResumoDTO> transferir(
             @PathVariable String numeroDaConta,
-            @Valid @org.springframework.web.bind.annotation.RequestBody TransferenciaDTO dto) {
+            @Valid @org.springframework.web.bind.annotation.RequestBody  TransferenciaDTO dto) {
         return ResponseEntity.ok(service.transferir(numeroDaConta, dto));
     }
 

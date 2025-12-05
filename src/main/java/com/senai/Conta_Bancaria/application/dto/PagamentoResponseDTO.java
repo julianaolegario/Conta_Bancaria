@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 public record PagamentoResponseDTO  (
         @NotNull(message = "ID do pagamento é obrigatório")
         @Schema(description = "ID do pagamento", example = "55")
-        Long id,
+        String id,
 
         @NotNull(message = "Conta é obrigatório")
         @Schema(description = "Especificar a conta", example = "Poupança")

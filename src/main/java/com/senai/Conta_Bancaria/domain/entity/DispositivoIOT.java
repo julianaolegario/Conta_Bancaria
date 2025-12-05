@@ -8,8 +8,8 @@ import lombok.Data;
 @Data
 public class  DispositivoIOT {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Identificador único do dispositivo
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id; // Identificador único do dispositivo
 
     @Column(nullable = false, unique = true, length = 100)
     private String codigoSerial; // Número de série único do dispositivo

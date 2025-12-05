@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 import java.net.URI;
 import java.util.List;
@@ -32,7 +33,7 @@ public class TaxaController {
     @Operation(
             summary = "Cadastrar uma nova taxa",
             description = "Adiciona uma nova taxa ao banco de dados após todas as validações",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            requestBody = @RequestBody(
                     required = true,
                     content = @Content(
                             schema = @Schema(implementation = ClienteRegistroDTO.class),
@@ -116,7 +117,7 @@ public class TaxaController {
             parameters = {
                     @Parameter(name = "Id", description = "Id da taxa a ser atualizada", example = "1")
             },
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            requestBody = @RequestBody(
                     required = true,
                     content = @Content(
                             schema = @Schema(implementation = ClienteRegistroDTO.class),

@@ -3,6 +3,7 @@ package com.senai.Conta_Bancaria.domain.service;
 import com.senai.Conta_Bancaria.domain.entity.Conta;
 import com.senai.Conta_Bancaria.domain.entity.Pagamento;
 import com.senai.Conta_Bancaria.domain.entity.Taxa;
+import com.senai.Conta_Bancaria.domain.enums.StatusPagamento;
 import com.senai.Conta_Bancaria.domain.exception.SaldoInsuficienteException;
 import org.springframework.stereotype.Service;
 
@@ -53,4 +54,46 @@ public class PagamentoDomainService {
             throw new SaldoInsuficienteException("Saldo insuficiente para realizar o pagamento.");
         }
     }
+
+    public void processarPagamento(Pagamento pagamento, Conta conta) { //metodo para processar pagamento (exemplo de adição do tipo de pagamento e status)
+
+        BigDecimal total = calcularValorTotal(pagamento);  // calcula o valor total considerando taxas
+
+
+        validarSaldo(conta, total); // valida se a conta tem saldo suficiente
+
+
+        pagamento.setStatus(StatusPagamento.APROVADO);  // altera o status do pagamento para "APROVADO" se o saldo for suficiente
+
+
+        switch (pagamento.getTipoPagamento()) { // lógica específica para o tipo de pagamento
+            case BOLETO:
+                // Lógica para pagamento via boleto
+                System.out.println("Processando pagamento via Boleto.");
+                break;
+            case CARTAO_CREDITO:
+                // Lógica para pagamento via cartão de crédito
+                System.out.println("Processando pagamento via Cartão de Crédito.");
+                break;
+            case TRANSFERENCIA:
+                // Lógica para pagamento via transferência
+                System.out.println("Processando pagamento via Transferência.");
+                break;
+            case PIX:
+                // Lógica para pagamento via PIX
+                System.out.println("Processando pagamento via PIX.");
+                break;
+            case DEPOSITO:
+                // Lógica para pagamento via depósito
+                System.out.println("Processando pagamento via Depósito.");
+                break;
+            default:
+                // Lógica para tipo de pagamento desconhecido
+                throw new IllegalArgumentException("Tipo de pagamento não suportado.");
+        }
+
+        // a operação é concluída e o pagamento é salvo com o status "APROVADO"
+
+    }
 }
+

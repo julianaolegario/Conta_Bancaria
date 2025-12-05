@@ -57,7 +57,7 @@ public class  PagamentoController {
     )
     @PostMapping
     public ResponseEntity<PagamentoResponseDTO> criarPagamento(
-            @Valid @org.springframework.web.bind.annotation.RequestBody PagamentoRequestDTO pagamentoRequestDTO) {
+            @Valid @RequestBody PagamentoRequestDTO pagamentoRequestDTO) {
 
         PagamentoResponseDTO response = pagamentoService.criarPagamento(pagamentoRequestDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -86,7 +86,7 @@ public class  PagamentoController {
             }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<PagamentoResponseDTO> buscarPagamentoPorId(@PathVariable Long id) {
+    public ResponseEntity<PagamentoResponseDTO> buscarPagamentoPorId(@PathVariable String id) {
         return ResponseEntity.ok(pagamentoService.buscarPagamentoPorId(id));
     }
 
@@ -101,7 +101,7 @@ public class  PagamentoController {
             }
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarPagamento(@PathVariable Long id) {
+    public ResponseEntity<Void> deletarPagamento(@PathVariable String id) {
         pagamentoService.deletarPagamento(id);
         return ResponseEntity.noContent().build();
     }
