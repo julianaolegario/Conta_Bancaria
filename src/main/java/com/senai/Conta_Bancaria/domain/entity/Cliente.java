@@ -15,6 +15,9 @@ public class  Cliente extends Usuario {
    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL) //um cliente pode ter varias contas
    private List<Conta> contas;
 
+   @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
+   private DispositivoIOT dispositivoIoT;
+
 
 
 }

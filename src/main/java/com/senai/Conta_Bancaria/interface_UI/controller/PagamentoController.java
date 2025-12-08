@@ -28,7 +28,6 @@ public class  PagamentoController {
         this.pagamentoService = pagamentoService;
     }
 
-    // ---------------------- CRIAR PAGAMENTO ----------------------
 
     @Operation(
             summary = "Criar um novo pagamento",
@@ -63,7 +62,6 @@ public class  PagamentoController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    // ---------------------- LISTAR PAGAMENTOS ----------------------
 
     @Operation(
             summary = "Listar todos os pagamentos",
@@ -75,7 +73,6 @@ public class  PagamentoController {
         return ResponseEntity.ok(pagamentoService.listarPagamentos());
     }
 
-    // ---------------------- BUSCAR POR ID ----------------------
 
     @Operation(
             summary = "Buscar pagamento por ID",
@@ -90,7 +87,6 @@ public class  PagamentoController {
         return ResponseEntity.ok(pagamentoService.buscarPagamentoPorId(id));
     }
 
-    // ---------------------- DELETAR PAGAMENTO ----------------------
 
     @Operation(
             summary = "Deletar pagamento",

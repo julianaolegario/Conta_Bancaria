@@ -16,6 +16,7 @@ import java.util.Set;
 
 @Entity
 @Data
+@Table(name = "pagamento")
 public class  Pagamento {
 
     @Id
@@ -36,7 +37,7 @@ public class  Pagamento {
     private BigDecimal valorPago; // Valor principal do pagamento
 
     @NotNull
-    private LocalDateTime dataPagamento; // Data e hora do pagamento
+    private LocalDateTime dataVencimento; // Data e hora do vencimento
 
     @NotNull
     @Enumerated(EnumType.STRING)

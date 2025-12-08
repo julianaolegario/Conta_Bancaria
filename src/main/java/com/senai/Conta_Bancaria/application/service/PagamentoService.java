@@ -43,7 +43,7 @@ public class  PagamentoService {
         pagamento.setConta(request.conta());
         pagamento.setDescricaoPagamento(request.descricaoPagamento());
         pagamento.setValorPago(new BigDecimal(request.valorPago())); //converte de string para big decimal
-        pagamento.setDataPagamento(LocalDateTime.parse(request.dataVencimento())); //converte string para localdatetime
+        pagamento.setDataVencimento(LocalDateTime.parse(request.dataVencimento())); //converte string para localdatetime
         pagamento.setStatus(StatusPagamento.PENDENTE); //define o pagamento como pendente primeiro
 
         pagamento.setTipoPagamento(request.tipoPagamento()); //define o tipo de pagamento
@@ -57,7 +57,7 @@ public class  PagamentoService {
                 salvo.getConta(),
                 salvo.getDescricaoPagamento(),
                 salvo.getValorPago().toString(),
-                salvo.getDataPagamento().toString()
+                salvo.getDataVencimento().toString()
         ); // converte a entidade para um dto de resposta, para nao expor detalhes da entidade e dar ao cliente apenas os dados necessario
     }
 
@@ -70,7 +70,7 @@ public class  PagamentoService {
                         p.getConta(),
                         p.getBoleto(),
                         p.getValorPago().toString(),
-                        p.getDataPagamento().toString()
+                        p.getDataVencimento().toString()
                 ))
                 .toList();
     }// busca os pagamentos, converte em DTO, e retorna uma lista
@@ -85,7 +85,7 @@ public class  PagamentoService {
                 pagamento.getConta(),
                 pagamento.getBoleto(),
                 pagamento.getValorPago().toString(),
-                pagamento.getDataPagamento().toString()
+                pagamento.getDataVencimento().toString()
         );
     }
 

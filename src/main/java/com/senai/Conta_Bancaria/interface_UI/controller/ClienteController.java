@@ -23,10 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class   ClienteController {
 
-
     private final ClienteService service;
-
-
 
     @Operation(
             summary = "Cadastrar um novo cliente",

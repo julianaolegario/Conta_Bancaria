@@ -28,8 +28,6 @@ import java.util.List;
 public class  ContaController {
     private final ContaService service;
 
-    // ---------------- LISTAR CONTAS ----------------
-
     @Operation(
             summary = "Listar todas as contas",
             description = "Retorna todas as contas cadastradas no sistema",
@@ -40,7 +38,7 @@ public class  ContaController {
         return ResponseEntity.ok(service.listarTodasContas());
     }
 
-    // ---------------- BUSCAR CONTA ----------------
+
 
     @Operation(
             summary = "Buscar conta pelo número",
@@ -60,7 +58,6 @@ public class  ContaController {
         return ResponseEntity.ok(service.buscarContaPorNumero(numeroDaConta));
     }
 
-    // ---------------- ATUALIZAR CONTA ----------------
 
     @Operation(
             summary = "Atualizar conta",
@@ -97,7 +94,6 @@ public class  ContaController {
         return ResponseEntity.ok(service.atualizarConta(numeroDaConta, dto));
     }
 
-    // ---------------- DELETAR CONTA ----------------
 
     @Operation(
             summary = "Deletar conta",
@@ -118,7 +114,6 @@ public class  ContaController {
         return ResponseEntity.noContent().build();
     }
 
-    // ---------------- SAQUE ----------------
 
     @Operation(
             summary = "Sacar valor",
@@ -147,7 +142,6 @@ public class  ContaController {
         return ResponseEntity.ok(service.sacar(numeroDaConta, dto));
     }
 
-    // ---------------- DEPOSITAR ----------------
 
     @Operation(
             summary = "Depositar valor",
@@ -176,7 +170,6 @@ public class  ContaController {
         return ResponseEntity.ok(service.depositar(numeroDaConta, dto));
     }
 
-    // ---------------- TRANSFERIR ----------------
 
     @Operation(
             summary = "Transferir valor",
@@ -206,7 +199,7 @@ public class  ContaController {
         return ResponseEntity.ok(service.transferir(numeroDaConta, dto));
     }
 
-    // ---------------- RENDIMENTO ----------------
+
 
     @Operation(
             summary = "Aplicar rendimento",

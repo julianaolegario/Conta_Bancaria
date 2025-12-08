@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "dispositivo_iot")
 public class  DispositivoIOT {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -1,18 +1,28 @@
 package com.senai.Conta_Bancaria.domain.service;
 
+import com.senai.Conta_Bancaria.application.service.AutenticacaoIotService;
 import com.senai.Conta_Bancaria.domain.entity.Conta;
 import com.senai.Conta_Bancaria.domain.entity.Pagamento;
 import com.senai.Conta_Bancaria.domain.entity.Taxa;
 import com.senai.Conta_Bancaria.domain.enums.StatusPagamento;
+import com.senai.Conta_Bancaria.domain.exception.AutenticacaoIoTExpiradaException;
+import com.senai.Conta_Bancaria.domain.exception.PagamentoInvalidoException;
 import com.senai.Conta_Bancaria.domain.exception.SaldoInsuficienteException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
 @Service
 public class PagamentoDomainService {
+    private final AutenticacaoIotService autenticacaoIotService;
+
+    public PagamentoDomainService(AutenticacaoIotService autenticacaoIotService) {
+        this.autenticacaoIotService = autenticacaoIotService;
+    }
 
     private static final BigDecimal VALOR_FIXO_DEFAULT = BigDecimal.ZERO; //se a taxa nao tiver valor coloca zero
     private static final BigDecimal PERCENTUAL_DEFAULT = BigDecimal.ZERO;
@@ -54,46 +64,77 @@ public class PagamentoDomainService {
             throw new SaldoInsuficienteException("Saldo insuficiente para realizar o pagamento.");
         }
     }
+    public void validarBoleto(Pagamento pagamento) {
+        if (pagamento.getDataVencimento() == null) {
+            throw new PagamentoInvalidoException("Data de vencimento ausente.");
+        }
 
-    public void processarPagamento(Pagamento pagamento, Conta conta) { //metodo para processar pagamento (exemplo de adição do tipo de pagamento e status)
-
-        BigDecimal total = calcularValorTotal(pagamento);  // calcula o valor total considerando taxas
-
-
-        validarSaldo(conta, total); // valida se a conta tem saldo suficiente
-
-
-        pagamento.setStatus(StatusPagamento.APROVADO);  // altera o status do pagamento para "APROVADO" se o saldo for suficiente
+        if (pagamento.getDataVencimento().isBefore(LocalDateTime.now())) {
+            throw new PagamentoInvalidoException("O boleto está vencido.");
+        }
+    }
+    public void processarPagamento(Pagamento pagamento, Conta conta, String id) {
+        pagamento.setStatus(StatusPagamento.PROCESSANDO);
 
 
-        switch (pagamento.getTipoPagamento()) { // lógica específica para o tipo de pagamento
+        try {
+            validarBoleto(pagamento); //valida boleto
+        } catch (PagamentoInvalidoException e) {
+            pagamento.setStatus(StatusPagamento.BOLETO_VENCIDO);
+            throw e;
+        }
+
+
+        BigDecimal total = calcularValorTotal(pagamento); //calcula o total
+
+
+        try {
+            validarSaldo(conta, total); //valida o saldo
+        } catch (SaldoInsuficienteException e) {
+            pagamento.setStatus(StatusPagamento.SALDO_INSUFICIENTE);
+            throw e;
+        }
+
+
+        boolean autenticado = autenticacaoIotService.validarOperacao(id); //valida a autenticacao iot
+
+        if (!autenticado) {
+            pagamento.setStatus(StatusPagamento.AUTENTICACAO_EXPIRADA);
+            throw new AutenticacaoIoTExpiradaException("Autenticação IoT inválida ou expirada.");
+        }
+
+
+        conta.setSaldo(conta.getSaldo().subtract(total));//debita o valor da conta
+
+        pagamento.setStatus(StatusPagamento.APROVADO); //define status final
+
+
+        registroTipoPagamento(pagamento);
+    }
+
+    private void registroTipoPagamento(Pagamento pagamento) {
+
+        switch (pagamento.getTipoPagamento()) {
             case BOLETO:
-                // Lógica para pagamento via boleto
                 System.out.println("Processando pagamento via Boleto.");
                 break;
             case CARTAO_CREDITO:
-                // Lógica para pagamento via cartão de crédito
                 System.out.println("Processando pagamento via Cartão de Crédito.");
                 break;
             case TRANSFERENCIA:
-                // Lógica para pagamento via transferência
                 System.out.println("Processando pagamento via Transferência.");
                 break;
             case PIX:
-                // Lógica para pagamento via PIX
                 System.out.println("Processando pagamento via PIX.");
                 break;
             case DEPOSITO:
-                // Lógica para pagamento via depósito
                 System.out.println("Processando pagamento via Depósito.");
                 break;
             default:
-                // Lógica para tipo de pagamento desconhecido
-                throw new IllegalArgumentException("Tipo de pagamento não suportado.");
+                pagamento.setStatus(StatusPagamento.FALHA);
+                throw new PagamentoInvalidoException("Tipo de pagamento não suportado.");
         }
-
-        // a operação é concluída e o pagamento é salvo com o status "APROVADO"
-
     }
 }
+
 
