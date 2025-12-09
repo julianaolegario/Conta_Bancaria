@@ -19,15 +19,15 @@ public class  GerenteService {
     private final GerenteRepository gerenteRepository;
     private final PasswordEncoder encoder;
 
-    @PreAuthorize("hasAnyRole('ADMIN','GERENTE')")
-    public List<GerenteDTO> listarTodosGerentes() {
+    @PreAuthorize("hasAnyRole('ADMIN','GERENTE')") //restrição de acesso
+    public List<GerenteDTO> listarTodosGerentes() { //lista todos os gerentes cadastrados no sistema
         return gerenteRepository.findAll().stream()
                 .map(GerenteDTO::fromEntity)
                 .toList();
     }
 
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')") //apenas admin pode cadastrar um gerente
     public GerenteDTO cadastrarGerente(GerenteDTO dto) {
         Gerente entity = dto.toEntity();
         entity.setSenha(encoder.encode(dto.senha()));

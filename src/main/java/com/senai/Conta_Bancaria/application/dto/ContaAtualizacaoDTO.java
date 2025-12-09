@@ -8,16 +8,16 @@ import java.math.BigDecimal;
 public record  ContaAtualizacaoDTO (
 
         @Schema(description = "Novo Saldo", example = "1500.00")
-        BigDecimal saldo, // Para Conta
+        BigDecimal saldo, // para Conta
 
         @Schema(description = "Novo Limite", example = "500.00")
-        BigDecimal limite, // Para ContaCorrente
+        BigDecimal limite, // para ContaCorrente
 
         @Schema(description = "Nova Taxa", example = "0.05")
-        BigDecimal taxa, // Para ContaCorrente
+        BigDecimal taxa, // para ContaCorrente
 
         @Schema(description = "Novo Rendimento", example = "0.005")
-        BigDecimal rendimento // Para ContaPoupanca
+        BigDecimal rendimento // para ContaPoupanca
 ) {
-        // Você pode usar @Nullable ou não usar @NotNull para permitir que sejam opcionais.
+
 }

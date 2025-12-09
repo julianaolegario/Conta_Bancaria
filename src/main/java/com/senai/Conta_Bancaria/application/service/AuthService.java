@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class  AuthService {
-    private final UsuarioRepository usuarios;
-    private final PasswordEncoder encoder;
-    private final JwtService jwt;
+    private final UsuarioRepository usuarios; //consulta usuarios no banco de dados
+    private final PasswordEncoder encoder; //criptografa senhas e compara senhas digitadas com senhas salvas no banco
+    private final JwtService jwt; // serviço personalizado que gera tokens
 
-    public String login(AuthDTO.LoginRequest req) {
+    public String login(AuthDTO.LoginRequest req) { //recebe um email e senha e retorna o token gerado
         Usuario usuario = usuarios.findByEmail(req.email())
                 .orElseThrow(() ->  new UsuarioNaoEncontradoException("Usuário não encontrado"));
 

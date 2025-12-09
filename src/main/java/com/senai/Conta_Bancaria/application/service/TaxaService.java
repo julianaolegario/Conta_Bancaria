@@ -17,16 +17,16 @@ public class  TaxaService {
 
     private final TaxaRepository repository;
 
-    public TaxaResponseDTO registrarTaxa(TaxaDTO dto) {
-        var taxa = dto.toEntity();
-        var taxaSalva = repository.save(taxa);
+    public TaxaResponseDTO registrarTaxa(TaxaDTO dto) { //recebe um dto com os dados para cadastrar a taxa
+        var taxa = dto.toEntity(); //converte dto em uma entidade taxa
+        var taxaSalva = repository.save(taxa); //retorna a entidade ja com o id gerdo
 
         return TaxaResponseDTO.fromEntity(taxaSalva);
 
     }
 
 
-    public List<TaxaResponseDTO> listarTodasAsTaxas() {
+    public List<TaxaResponseDTO> listarTodasAsTaxas() { //retorna todas as taxas cadastradas
 
         return repository.findAll().stream()
                 .map(TaxaResponseDTO::fromEntity)
@@ -34,7 +34,7 @@ public class  TaxaService {
 
     }
 
-    public Taxa buscarTaxaPorId(String id) {
+    public Taxa buscarTaxaPorId(String id) { //busca umataxa especifica usando o id recebido por parametro
 
         return repository.findById(id).orElseThrow(
                 () -> new EntidadeNaoEncontradaException("Taxa com ID " + id)
@@ -43,7 +43,7 @@ public class  TaxaService {
 
     }
 
-    public TaxaResponseDTO atualizarTaxa(String id, TaxaDTO dto) {
+    public TaxaResponseDTO atualizarTaxa(String id, TaxaDTO dto) { //atualiza os dados de uma taxa ja existente
         var taxa = buscarTaxaPorId(id);
         taxa.setDescricao(dto.descricao());
         taxa.setPercentual(dto.percentual());
@@ -55,7 +55,7 @@ public class  TaxaService {
     }
 
 
-    public void deletarTaxa(String id) {
+    public void deletarTaxa(String id) { //apaga uma taxa
         var taxa = buscarTaxaPorId(id);
         repository.delete(taxa);
     }

@@ -15,7 +15,7 @@ import java.util.List;
 @Service// é a cozinha, criar o cliente, permite injetalo em outros componentes
 @RequiredArgsConstructor
 
-public class  ClienteService{ // service é a camaa entre o controlador e o repository, fornece servicos que podem ser reutilizados por outras partes da aplicação
+public class  ClienteService{ // service é a cama entre o controlador e o repository, fornece servicos que podem ser reutilizados por outras partes da aplicação
 
     private final ClienteRepository repository;
     private final PasswordEncoder passwordEncoder;
