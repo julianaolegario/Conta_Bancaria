@@ -54,7 +54,7 @@ public class  Pagamento {
     private List<Taxa> taxas = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "dispositivo_id", nullable = false) // Relacionamento com Dispositivo IoT
+    @JoinColumn(name = "dispositivo_id", referencedColumnName = "id",  nullable = false) // Relacionamento com Dispositivo IoT
     private DispositivoIOT dispositivoIOT;
 
     @NotNull
