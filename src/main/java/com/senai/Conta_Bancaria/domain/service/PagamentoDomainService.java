@@ -2,12 +2,15 @@ package com.senai.Conta_Bancaria.domain.service;
 
 import com.senai.Conta_Bancaria.application.service.AutenticacaoIotService;
 import com.senai.Conta_Bancaria.domain.entity.Conta;
+import com.senai.Conta_Bancaria.domain.entity.DispositivoIOT;
 import com.senai.Conta_Bancaria.domain.entity.Pagamento;
 import com.senai.Conta_Bancaria.domain.entity.Taxa;
 import com.senai.Conta_Bancaria.domain.enums.StatusPagamento;
 import com.senai.Conta_Bancaria.domain.exception.AutenticacaoIoTExpiradaException;
 import com.senai.Conta_Bancaria.domain.exception.PagamentoInvalidoException;
 import com.senai.Conta_Bancaria.domain.exception.SaldoInsuficienteException;
+import com.senai.Conta_Bancaria.domain.exception.TaxaInvalidaException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,16 +20,39 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PagamentoDomainService {
     private final AutenticacaoIotService autenticacaoIotService;
-
-    public PagamentoDomainService(AutenticacaoIotService autenticacaoIotService) {
-        this.autenticacaoIotService = autenticacaoIotService;
-    }
 
     private static final BigDecimal VALOR_FIXO_DEFAULT = BigDecimal.ZERO; //se a taxa nao tiver valor coloca zero
     private static final BigDecimal PERCENTUAL_DEFAULT = BigDecimal.ZERO;
 
+    private void validarTaxa(Taxa taxa) {
+
+        if (taxa == null) {
+            throw new TaxaInvalidaException("Taxa não pode ser nula.");
+        }
+
+        if (taxa.getDescricao() == null || taxa.getDescricao().isBlank()) {
+            throw new TaxaInvalidaException("Descrição da taxa é obrigatória.");
+        }
+
+        BigDecimal percentual = taxa.getPercentual();
+        BigDecimal valorFixo = taxa.getValorFixo();
+
+        if (percentual != null && percentual.compareTo(BigDecimal.ZERO) < 0) {
+            throw new TaxaInvalidaException("Percentual da taxa não pode ser negativo.");
+        }
+
+        if (valorFixo != null && valorFixo.compareTo(BigDecimal.ZERO) < 0) {
+            throw new TaxaInvalidaException("Valor fixo da taxa não pode ser negativo.");
+        }
+
+        if ((percentual == null || percentual.compareTo(BigDecimal.ZERO) == 0)
+                && (valorFixo == null || valorFixo.compareTo(BigDecimal.ZERO) == 0)) {
+            throw new TaxaInvalidaException("A taxa deve possuir percentual ou valor fixo maior que zero.");
+        }
+    }
 
     public BigDecimal calcularValorTotal(Pagamento pagamento) { //calcula o pagamento com as taxas
 
@@ -37,7 +63,8 @@ public class PagamentoDomainService {
 
 
         for (Taxa taxa : taxas) {  // Para cada taxa associada ao pagamento, aplica o percentual e o valor fixo
-            // Usando valores padrão caso os valores sejam nulos
+            validarTaxa(taxa);
+
             BigDecimal percentual = taxa.getPercentual() != null ? taxa.getPercentual() : PERCENTUAL_DEFAULT;
             BigDecimal valorFixo = taxa.getValorFixo() != null ? taxa.getValorFixo() : VALOR_FIXO_DEFAULT;
 
@@ -85,7 +112,9 @@ public class PagamentoDomainService {
         }
 
 
-        BigDecimal total = calcularValorTotal(pagamento); //calcula o total
+        BigDecimal total = calcularValorTotal(pagamento);//calcula o total
+        pagamento.setValorTotal(total);
+        pagamento.setValorTaxas(total.subtract(pagamento.getValorPago()));
 
 
         try {
@@ -96,7 +125,12 @@ public class PagamentoDomainService {
         }
 
 
-        boolean autenticado = autenticacaoIotService.validarOperacao(id); //valida a autenticacao iot
+        DispositivoIOT dispositivo = pagamento.getDispositivoIOT();
+        boolean autenticado = autenticacaoIotService.validarOperacao(
+                dispositivo.getCodigoSerial(),
+                dispositivo.getChavePublica(),
+                conta.getCliente().getId()
+        );
 
         if (!autenticado) {
             pagamento.setStatus(StatusPagamento.AUTENTICACAO_EXPIRADA);

@@ -53,6 +53,16 @@ public class  Pagamento {
     @JoinColumn(name = "pagamento_id") // cria uma chuva estrangeira na tabela Taxa
     private List<Taxa> taxas = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "dispositivo_id", nullable = false) // Relacionamento com Dispositivo IoT
+    private DispositivoIOT dispositivoIOT;
+
+    @NotNull
+    private BigDecimal valorTotal; // valor principal + taxas
+
+    @NotNull
+    private BigDecimal valorTaxas; // soma das taxas aplicadas
+
 }
 
 
