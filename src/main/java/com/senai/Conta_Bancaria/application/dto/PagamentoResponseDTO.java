@@ -1,8 +1,11 @@
 package com.senai.Conta_Bancaria.application.dto;
 
 import com.senai.Conta_Bancaria.domain.entity.Conta;
+import com.senai.Conta_Bancaria.domain.enums.StatusPagamento;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+
+import java.math.BigDecimal;
 
 public record PagamentoResponseDTO  (
         @NotNull(message = "ID do pagamento é obrigatório")
@@ -23,7 +26,14 @@ public record PagamentoResponseDTO  (
 
         @NotNull(message = "Data do pagamento é obrigatório")
         @Schema(description = "Informar a data do pagamento", example = "01-09-2025")
-        String dataPagamento
+        String dataPagamento,
+
+        StatusPagamento status,
+
+        BigDecimal valorTaxas,
+
+        BigDecimal valorTotal
+
 )
 {
 }

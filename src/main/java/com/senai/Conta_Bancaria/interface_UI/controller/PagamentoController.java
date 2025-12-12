@@ -44,10 +44,12 @@ public class  PagamentoController {
                                     name = "Exemplo de criação de pagamento",
                                     value = """
                                             {
-                                              "valor": 150.00,
-                                              "descricao": "Pagamento de boleto",
-                                              "contaOrigem": "12345-6",
-                                              "contaDestino": "65432-1"
+                                              "conta": { "id": "123" },
+                                                            "boleto": "2191292992",
+                                                            "descricaoPagamento": "Pagamento de luz",
+                                                            "valorPago": "50.00",
+                                                            "dataVencimento": "11-10-2025",
+                                                            "tipoPagamento": "CARTAO_CREDITO"
                                             }
                                             """
                             )
@@ -58,45 +60,45 @@ public class  PagamentoController {
                     @ApiResponse(responseCode = "400", description = "Dados inválidos enviados")
             }
     )
-    @PostMapping // endpoint para criar um pagamento, valida o DTO enviado pelo cliente e delega a criação ao serviço, retorna 201 Created com o pagamento criado.
+
+    @PostMapping
     public ResponseEntity<PagamentoResponseDTO> criarPagamento(
-            @Valid @RequestBody PagamentoRequestDTO pagamentoRequestDTO) {
+            @Valid @RequestBody PagamentoRequestDTO dto) {
 
-        // Converte o DTO em Pagamento
         Pagamento pagamento = new Pagamento();
-        pagamento.setConta(pagamentoRequestDTO.conta());
-        pagamento.setDescricaoPagamento(pagamentoRequestDTO.descricaoPagamento());
-        pagamento.setValorPago(new BigDecimal(pagamentoRequestDTO.valorPago()));
-        pagamento.setDataVencimento(LocalDateTime.parse(pagamentoRequestDTO.dataVencimento()));
+        pagamento.setConta(dto.conta());
+        pagamento.setBoleto(dto.boleto());
+        pagamento.setDescricaoPagamento(dto.descricaoPagamento());
+        pagamento.setValorPago(new BigDecimal(dto.valorPago()));
+        pagamento.setDataVencimento(LocalDateTime.parse(dto.dataVencimento()));
         pagamento.setStatus(StatusPagamento.PENDENTE);
-        pagamento.setTipoPagamento(pagamentoRequestDTO.tipoPagamento());
-
+        pagamento.setTipoPagamento(dto.tipoPagamento());
 
         Pagamento salvo = pagamentoService.realizar(pagamento, "idClienteAqui");
 
-        // Retorna o DTO de resposta
         PagamentoResponseDTO response = new PagamentoResponseDTO(
                 salvo.getId(),
                 salvo.getConta(),
-                salvo.getDescricaoPagamento(),
+                salvo.getBoleto(),
                 salvo.getValorPago().toString(),
-                salvo.getDataVencimento().toString()
+                salvo.getDataVencimento().toString(),
+                salvo.getStatus(),
+                salvo.getValorTaxas(),
+                salvo.getValorTotal()
         );
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-
     @Operation(
             summary = "Listar todos os pagamentos",
-            description = "Retorna a lista completa de pagamentos cadastrados",
+            description = "Retorna todos os pagamentos cadastrados",
             responses = @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
     )
-    @GetMapping   // endpoint para listar todos os pagamentos, retorna 200 OK com a lista de pagamentos.
+    @GetMapping
     public ResponseEntity<List<PagamentoResponseDTO>> listarPagamentos() {
         return ResponseEntity.ok(pagamentoService.listarPagamentos());
     }
-
 
     @Operation(
             summary = "Buscar pagamento por ID",
@@ -106,21 +108,20 @@ public class  PagamentoController {
                     @ApiResponse(responseCode = "404", description = "Pagamento não encontrado")
             }
     )
-    @GetMapping("/{id}") // endpoint para buscar um pagamento específico pelo ID, retorna 200 OK se encontrado, 404 se não existir.
+    @GetMapping("/{id}")
     public ResponseEntity<PagamentoResponseDTO> buscarPagamentoPorId(@PathVariable String id) {
         return ResponseEntity.ok(pagamentoService.buscarPagamentoPorId(id));
     }
-
 
     @Operation(
             summary = "Deletar pagamento",
             description = "Remove um pagamento existente a partir do seu ID",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "Pagamento removido com sucesso"),
+                    @ApiResponse(responseCode = "204", description = "Pagamento deletado com sucesso"),
                     @ApiResponse(responseCode = "404", description = "Pagamento não encontrado")
             }
     )
-    @DeleteMapping("/{id}") // endpoint para remover um pagamento pelo ID, retorna 204 No Content para indicar que a exclusão foi bem-sucedida.
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarPagamento(@PathVariable String id) {
         pagamentoService.deletarPagamento(id);
         return ResponseEntity.noContent().build();

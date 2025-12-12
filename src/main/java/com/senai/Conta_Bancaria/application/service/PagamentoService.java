@@ -1,22 +1,16 @@
 package com.senai.Conta_Bancaria.application.service;
 
-import com.senai.Conta_Bancaria.application.dto.PagamentoRequestDTO;
 import com.senai.Conta_Bancaria.application.dto.PagamentoResponseDTO;
-import com.senai.Conta_Bancaria.application.dto.TaxaResponseDTO;
 import com.senai.Conta_Bancaria.domain.entity.Conta;
 import com.senai.Conta_Bancaria.domain.entity.Pagamento;
-import com.senai.Conta_Bancaria.domain.enums.StatusPagamento;
 import com.senai.Conta_Bancaria.domain.exception.PagamentoNaoEncontradoException;
 import com.senai.Conta_Bancaria.domain.repository.ContaRepository;
 import com.senai.Conta_Bancaria.domain.repository.PagamentoRepository;
 import com.senai.Conta_Bancaria.domain.service.PagamentoDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
+
 
 @Service
 @RequiredArgsConstructor
@@ -39,27 +33,6 @@ public class PagamentoService {
     }
 
 
-    public PagamentoResponseDTO criarPagamento(PagamentoRequestDTO request) {
-
-        Pagamento pagamento = new Pagamento(); //cria o objeto de pagamento e preenche com as requisições
-
-        pagamento.setConta(request.conta());
-        pagamento.setDescricaoPagamento(request.descricaoPagamento());
-        pagamento.setValorPago(new BigDecimal(request.valorPago()));
-        pagamento.setDataVencimento(LocalDateTime.parse(request.dataVencimento()));
-        pagamento.setStatus(StatusPagamento.PENDENTE);
-        pagamento.setTipoPagamento(request.tipoPagamento());
-
-        Pagamento salvo = pagamentoRepository.save(pagamento); //salva o pagamento no banco
-
-        return new PagamentoResponseDTO( //retorna um dto de resposta com os dados do pagamento
-                salvo.getId(),
-                salvo.getConta(),
-                salvo.getDescricaoPagamento(),
-                salvo.getValorPago().toString(),
-                salvo.getDataVencimento().toString()
-        );
-    }
 
 
     public List<PagamentoResponseDTO> listarPagamentos() { //lista todos os pagamentos cadastrados no sistema
@@ -69,7 +42,10 @@ public class PagamentoService {
                         p.getConta(),
                         p.getBoleto(),
                         p.getValorPago().toString(),
-                        p.getDataVencimento().toString()
+                        p.getDataVencimento().toString(),
+                        p.getStatus(),
+                        p.getValorTaxas(),
+                        p.getValorTotal()
                 ))
                 .toList();
     }
@@ -85,7 +61,10 @@ public class PagamentoService {
                 pagamento.getConta(),
                 pagamento.getBoleto(),
                 pagamento.getValorPago().toString(),
-                pagamento.getDataVencimento().toString()
+                pagamento.getDataVencimento().toString(),
+                pagamento.getStatus(),
+                pagamento.getValorTaxas(),
+                pagamento.getValorTotal()
         );
     }
 
