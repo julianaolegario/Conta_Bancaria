@@ -3,6 +3,8 @@ package com.senai.Conta_Bancaria.interface_UI.controller;
 import com.senai.Conta_Bancaria.application.dto.PagamentoRequestDTO;
 import com.senai.Conta_Bancaria.application.dto.PagamentoResponseDTO;
 import com.senai.Conta_Bancaria.application.service.PagamentoService;
+import com.senai.Conta_Bancaria.domain.entity.Pagamento;
+import com.senai.Conta_Bancaria.domain.enums.StatusPagamento;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -15,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Tag(name = "Pagamentos", description = "Operações de criação, consulta e remoção de pagamentos")
@@ -58,7 +62,27 @@ public class  PagamentoController {
     public ResponseEntity<PagamentoResponseDTO> criarPagamento(
             @Valid @RequestBody PagamentoRequestDTO pagamentoRequestDTO) {
 
-        PagamentoResponseDTO response = pagamentoService.criarPagamento(pagamentoRequestDTO);
+        // Converte o DTO em Pagamento
+        Pagamento pagamento = new Pagamento();
+        pagamento.setConta(pagamentoRequestDTO.conta());
+        pagamento.setDescricaoPagamento(pagamentoRequestDTO.descricaoPagamento());
+        pagamento.setValorPago(new BigDecimal(pagamentoRequestDTO.valorPago()));
+        pagamento.setDataVencimento(LocalDateTime.parse(pagamentoRequestDTO.dataVencimento()));
+        pagamento.setStatus(StatusPagamento.PENDENTE);
+        pagamento.setTipoPagamento(pagamentoRequestDTO.tipoPagamento());
+
+
+        Pagamento salvo = pagamentoService.realizar(pagamento, "idClienteAqui");
+
+        // Retorna o DTO de resposta
+        PagamentoResponseDTO response = new PagamentoResponseDTO(
+                salvo.getId(),
+                salvo.getConta(),
+                salvo.getDescricaoPagamento(),
+                salvo.getValorPago().toString(),
+                salvo.getDataVencimento().toString()
+        );
+
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
