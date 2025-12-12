@@ -1,12 +1,11 @@
 package com.senai.Conta_Bancaria.interface_UI.controller;
 
-import com.senai.Conta_Bancaria.application.dto.ClienteRegistroDTO;
+
 import com.senai.Conta_Bancaria.application.dto.TaxaDTO;
 import com.senai.Conta_Bancaria.application.dto.TaxaResponseDTO;
 import com.senai.Conta_Bancaria.application.service.TaxaService;
 import com.senai.Conta_Bancaria.domain.entity.Taxa;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,155 +29,72 @@ public class TaxaController {
 
     private final TaxaService service;
 
-    @Operation(
+    @Operation( //cadastra uma nova taxa
             summary = "Cadastrar uma nova taxa",
-            description = "Adiciona uma nova taxa ao banco de dados após todas as validações",
-            requestBody = @RequestBody(
+            description = "Adiciona uma nova taxa ao banco de dados após validações",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     required = true,
                     content = @Content(
-                            schema = @Schema(implementation = ClienteRegistroDTO.class),
-                            examples = @ExampleObject(name = "Exemplo válido", value = """
-                                        {
-                                          "id": 1,
-                                          "descricao" : "taxaBoleto",
-                                          "Percentual" : 0.5,
-                                          "valor fixo" : 3.00
-                                        }
-                                    """
+                            schema = @Schema(implementation = TaxaDTO.class),
+                            examples = @ExampleObject(
+                                    name = "Exemplo válido",
+                                    value = """
+                                            {
+                                              "descricao": "Taxa de Boleto",
+                                              "percentual": 0.05,
+                                              "valorFixo": 3.00
+                                            }
+                                            """
                             )
                     )
             ),
-
             responses = {
                     @ApiResponse(responseCode = "201", description = "Taxa cadastrada com sucesso"),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Erro de validação",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    examples = {
-                                            @ExampleObject(name = "Taxa Inválida", value = "\"Dados inválidos\""),
-                                    }
-                            )
-                    )
+                    @ApiResponse(responseCode = "400", description = "Erro de validação")
             }
     )
-    @PostMapping
+    @PostMapping // recebe uma TaxaDTO do cliente, valida e delega para o serviço criar a taxa e retorna 201 Created com a URL da nova taxa para seguir boas práticas REST.
+
     public ResponseEntity<TaxaResponseDTO> registrarTaxa(@RequestBody TaxaDTO dto){
-        TaxaResponseDTO novaTaxa= service.registrarTaxa(dto);
+        TaxaResponseDTO novaTaxa = service.registrarTaxa(dto);
+
         return ResponseEntity.created(
-                URI.create("/api/taxa/id"+ novaTaxa.id())
+                URI.create("/api/taxas/" + novaTaxa.id())
         ).body(novaTaxa);
     }
 
-    @Operation(
-            summary = "Listar todas as taxas",
-            description = "Retorna todas as taxas cadastradas",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
-            }
-    )
-    @GetMapping
+    @Operation(summary = "Listar todas as taxas")
+    @GetMapping // consulta todas as taxas cadastradas no sistema e retorna 200 OK com a lista de TaxaResponseDTOs.
     public ResponseEntity<List<TaxaResponseDTO>> listarTodasAsTaxas(){
         return ResponseEntity.ok(service.listarTodasAsTaxas());
     }
 
     @Operation(
             summary = "Buscar taxa por ID",
-            description = "Retorna uma taxa existente a partir do seu id",
-            parameters = {
-                    @Parameter(name = "id", description = "Id da taxa a ser buscada", example = "1")
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Taxa encontrada"),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Taxa não encontrada",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    examples = @ExampleObject(value = "\"Taxa com id 1 não encontrada.\"")
-                            )
-                    )
-            }
+            description = "Retorna uma taxa existente a partir do seu id"
     )
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}") // busca uma taxa específica pelo ID fornecido e converte a entidade para DTO antes de retornar para não expor diretamente a modelagem interna.
 
     public ResponseEntity<TaxaResponseDTO> buscarTaxaPorId(@PathVariable String id){
-        // Busca a Entidade Taxa
         Taxa taxa = service.buscarTaxaPorId(id);
-        // Converte a Entidade para o DTO de Resposta antes de retornar
-        TaxaResponseDTO responseDTO = TaxaResponseDTO.fromEntity(taxa);
-        return ResponseEntity.ok(responseDTO);
+        return ResponseEntity.ok(TaxaResponseDTO.fromEntity(taxa));
     }
 
     @Operation(
-            summary = "Atualizar uma taxa",
-            description = "Atualiza os dados de uma taxa existente com novas informações",
-            parameters = {
-                    @Parameter(name = "Id", description = "Id da taxa a ser atualizada", example = "1")
-            },
-            requestBody = @RequestBody(
-                    required = true,
-                    content = @Content(
-                            schema = @Schema(implementation = ClienteRegistroDTO.class),
-                            examples = @ExampleObject(name = "Exemplo de atualização", value = """
-                        {
-                          {
-                                          "id": 1,
-                                          "descricao" : "taxaBoleto",
-                                          "Percentual" : 0.5,
-                                          "valor fixo" : 5.00
-                                        }
-                    """)
-                    )
-            ),
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Taxa atualizada com sucesso"),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Erro de validação",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    examples = {
-                                            @ExampleObject(name = "Taxa inválida", value = "\"Dados inválidos\""),
-                                    }
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Taxa não encontrada",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    examples = @ExampleObject(value = "\"Taxa com id 1 não encontrada.\"")
-                            )
-                    )
-            }
+            summary = "Atualizar taxa",
+            description = "Atualiza as informações de uma taxa existente"
     )
-    @PutMapping("/id/{id}")
+    @PutMapping("/{id}") // atualiza os dados de uma taxa existente com base no ID e nas informações recebidas e retorna 200 OK com a taxa atualizada.
     public ResponseEntity<TaxaResponseDTO> atualizarTaxaPorId(@PathVariable String id,
                                                               @RequestBody TaxaDTO dto) {
         return ResponseEntity.ok(service.atualizarTaxa(id, dto));
     }
 
     @Operation(
-            summary = "Deletar uma taxa",
-            description = "Remove uma taxa da base de dados a partir do seu id",
-            parameters = {
-                    @Parameter(name = "Id", description = "Id da taxa a ser deletada", example = "1")
-            },
-            responses = {
-                    @ApiResponse(responseCode = "204", description = "Taxa removida com sucesso"),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Taxa não encontrada",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    examples = @ExampleObject(value = "\"Taxa com id 1 não encontrado.\"")
-                            )
-                    )
-            }
+            summary = "Deletar taxa",
+            description = "Remove uma taxa pelo id"
     )
-    @DeleteMapping("/id/{id}")
+    @DeleteMapping("/{id}") // remove uma taxa pelo ID informado e retorna 204 No Content, indicando que a exclusão foi bem-sucedida sem enviar corpo.
     public ResponseEntity<Void> deletarTaxa(@PathVariable String id){
         service.deletarTaxa(id);
         return ResponseEntity.noContent().build();

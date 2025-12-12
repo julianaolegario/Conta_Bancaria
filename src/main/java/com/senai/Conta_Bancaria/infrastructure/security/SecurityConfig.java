@@ -27,6 +27,30 @@ public class  SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**","/swagger-ui/**","/v3/api-docs/**").permitAll()
 
+
+                        // apenas GERENTE e ADMIN podem criar taxas
+                        .requestMatchers(HttpMethod.POST, "/api/taxas/**").hasAnyRole("GERENTE", "ADMIN")
+
+                        // apenas GERENTE e ADMIN podem atualizar taxas
+                        .requestMatchers(HttpMethod.PUT, "/api/taxas/**").hasAnyRole("GERENTE", "ADMIN")
+
+                        // apenas GERENTE e ADMIN podem deletar taxas
+                        .requestMatchers(HttpMethod.DELETE, "/api/taxas/**").hasAnyRole("GERENTE", "ADMIN")
+
+                        // Qualquer usuário autenticado pode listar taxas (ADMIN, GERENTE, CLIENTE)
+                        .requestMatchers(HttpMethod.GET, "/api/taxas/**").hasAnyRole("CLIENTE", "GERENTE", "ADMIN")
+
+
+                        // Clientes podem criar pagamentos
+                        .requestMatchers(HttpMethod.POST, "/api/pagamentos/**").hasRole("CLIENTE")
+
+                        // Clientes podem listar seus pagamentos
+                        .requestMatchers(HttpMethod.GET, "/api/pagamentos/**").hasRole("CLIENTE")
+
+                        // Clientes podem deletar pagamento (se fizer parte do app)
+                        .requestMatchers(HttpMethod.DELETE, "/api/pagamentos/**").hasRole("CLIENTE")
+
+
                         .requestMatchers(HttpMethod.POST, "/api/cliente/**").hasAnyRole("ADMIN","GERENTE")
                         .requestMatchers(HttpMethod.GET, "/api/cliente").hasAnyRole("ADMIN","GERENTE")
                         .requestMatchers(HttpMethod.PUT, "/api/cliente/**").hasAnyRole("ADMIN", "GERENTE")

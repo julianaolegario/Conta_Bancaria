@@ -14,7 +14,7 @@ public class  AutenticacaoIotService {
     @Transactional(readOnly = true)
     public boolean validarOperacao(String codigoSerial, String chavePublicaEnviada, String id) {
 
-        // 1. Busca o dispositivo pelo número de série
+        // busca o dispositivo pelo número de série
         DispositivoIOT dispositivo = dispositivoRepository
                 .findByCodigoSerial(codigoSerial)
                 .orElse(null);
@@ -24,19 +24,19 @@ public class  AutenticacaoIotService {
             return false;
         }
 
-        // 2. Valida chave pública
+        // valida chave pública
         if (!dispositivo.getChavePublica().equals(chavePublicaEnviada)) {
             System.out.println("Chave pública inválida");
             return false;
         }
 
-        // 3. Verifica se está ativo
+        // verifica se está ativo
         if (!dispositivo.getAtivo()) {
             System.out.println("Dispositivo inativo");
             return false;
         }
 
-        // 4. Verifica se pertence ao cliente informado
+        // verifica se pertence ao cliente informado
         if (!dispositivo.getCliente().getId().equals(id)) {
             System.out.println(" Dispositivo não pertence ao cliente");
             return false;

@@ -21,27 +21,27 @@ public class  Pagamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id; // Identificador único
+    private String id; // identificador único
 
     @ManyToOne
-    @JoinColumn(name = "conta_id", nullable = false) // Relacionamento com a Conta
+    @JoinColumn(name = "conta_id", nullable = false) // relacionamento com a conta
     private Conta conta;
 
     @NotBlank
-    private String boleto; // Identificador do boleto ou referência do serviço
+    private String boleto; // identificador do boleto ou referência do serviço
 
     @NotBlank
     private String descricaoPagamento;
 
     @NotNull
-    private BigDecimal valorPago; // Valor principal do pagamento
+    private BigDecimal valorPago; // valor principal do pagamento
 
     @NotNull
-    private LocalDateTime dataVencimento; // Data e hora do vencimento
+    private LocalDateTime dataVencimento; // data e hora do vencimento
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private StatusPagamento status; // Estado do pagamento (SUCESSO, FALHA, etc.)
+    private StatusPagamento status; // estado do pagamento (SUCESSO, FALHA, etc.)
 
     @NotNull
     @Enumerated(EnumType.STRING)

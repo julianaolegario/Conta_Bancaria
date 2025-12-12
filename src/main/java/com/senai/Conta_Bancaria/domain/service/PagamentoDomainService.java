@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -69,7 +70,7 @@ public class PagamentoDomainService {
             BigDecimal valorFixo = taxa.getValorFixo() != null ? taxa.getValorFixo() : VALOR_FIXO_DEFAULT;
 
 
-            BigDecimal valorTaxaPercentual = pagamento.getValorPago().multiply(percentual);// coloca o percentual sobre o valor pago
+            BigDecimal valorTaxaPercentual = pagamento.getValorPago().multiply(percentual).setScale(2, RoundingMode.HALF_UP);// coloca o percentual sobre o valor pago
 
 
             total = total.add(valorTaxaPercentual).add(valorFixo);// coloca o valor fixo da taxa ao total
@@ -82,13 +83,13 @@ public class PagamentoDomainService {
     public void validarSaldo(Conta conta, BigDecimal total) { //verifica se a conta tem saldo suficiente
         // Verifica se a conta é nula ou o saldo é nulo
         if (conta == null || conta.getSaldo() == null) {
-            throw new IllegalArgumentException("Conta ou saldo não podem ser nulos.");
+            throw new PagamentoInvalidoException("Conta ou saldo não podem ser nulos.");
         } //garante que a conta e o saldo estejam definidos antes de fazer qualquer validação.
 
         // Compara o saldo da conta com o total a ser pago (considerando taxas)
         if (conta.getSaldo().compareTo(total) < 0) {
             // Se o saldo da conta for insuficiente, lança uma exceção
-            throw new SaldoInsuficienteException("Saldo insuficiente para realizar o pagamento.");
+            throw new SaldoInsuficienteException("pagamento");
         }
     }
     public void validarBoleto(Pagamento pagamento) {
@@ -126,6 +127,10 @@ public class PagamentoDomainService {
 
 
         DispositivoIOT dispositivo = pagamento.getDispositivoIOT();
+        if (dispositivo == null) {
+            pagamento.setStatus(StatusPagamento.AUTENTICACAO_EXPIRADA);
+            throw new AutenticacaoIoTExpiradaException("Dispositivo IoT não informado.");
+        }
         boolean autenticado = autenticacaoIotService.validarOperacao(
                 dispositivo.getCodigoSerial(),
                 dispositivo.getChavePublica(),

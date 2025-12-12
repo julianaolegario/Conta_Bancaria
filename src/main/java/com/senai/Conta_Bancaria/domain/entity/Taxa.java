@@ -12,14 +12,14 @@ import java.math.BigDecimal;
 public class  Taxa {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id; // Identificador único da taxa
+    private String id; // identificador único da taxa
 
     @Column(nullable = false, length = 100)
-    private String descricao; // Nome da taxa (ex: IOF, Tarifa Bancária, etc.)
+    private String descricao; // nome da taxa (ex: IOF, Tarifa Bancária, etc.)
 
     @Column(nullable = false, precision = 5, scale = 2)
-    private BigDecimal percentual; // Percentual da taxa (ex: 2.5%)
+    private BigDecimal percentual; // percentual da taxa (ex: 2.5%)
 
     @Column(precision = 10, scale = 2)
-    private BigDecimal valorFixo; // Valor adicional fixo (opcional)
+    private BigDecimal valorFixo; // valor adicional fixo (opcional)
 }

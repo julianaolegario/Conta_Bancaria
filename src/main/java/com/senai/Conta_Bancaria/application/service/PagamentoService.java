@@ -3,10 +3,13 @@ package com.senai.Conta_Bancaria.application.service;
 import com.senai.Conta_Bancaria.application.dto.PagamentoRequestDTO;
 import com.senai.Conta_Bancaria.application.dto.PagamentoResponseDTO;
 import com.senai.Conta_Bancaria.application.dto.TaxaResponseDTO;
+import com.senai.Conta_Bancaria.domain.entity.Conta;
 import com.senai.Conta_Bancaria.domain.entity.Pagamento;
 import com.senai.Conta_Bancaria.domain.enums.StatusPagamento;
 import com.senai.Conta_Bancaria.domain.exception.PagamentoNaoEncontradoException;
+import com.senai.Conta_Bancaria.domain.repository.ContaRepository;
 import com.senai.Conta_Bancaria.domain.repository.PagamentoRepository;
+import com.senai.Conta_Bancaria.domain.service.PagamentoDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,55 +18,51 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Service //logica de negocio
-@RequiredArgsConstructor // cria um construtor automatico
-public class  PagamentoService {
+@Service
+@RequiredArgsConstructor
+public class PagamentoService {
 
-    private final PagamentoRepository pagamentoRepository; // repository que interage com o banco de dados, vai salvar, buscar, listar e excluir pagamentos do banco
-    private final TaxaService taxaService; //logica das taxas
+    private final PagamentoRepository pagamentoRepository;
+    private final ContaRepository contaRepository;
+    private final PagamentoDomainService pagamentoDomainService;
+    private final TaxaService taxaService;
 
+    public Pagamento realizar(Pagamento pagamento, String idCliente) {
 
-    private BigDecimal calcularValorComTaxa(BigDecimal valorPago){
-        List<TaxaResponseDTO> taxas = taxaService.listarTodasAsTaxas(); //pega todas as taxas ativas
+        Conta conta = contaRepository.findById(pagamento.getConta().getId())
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
 
-        BigDecimal valorTotal = valorPago;
+        pagamentoDomainService.processarPagamento(pagamento, conta, idCliente); //processa o pagamento aplicando regras de negócio
 
-
-        for (TaxaResponseDTO taxa : taxas) {//coloca a taxa no valor
-            valorTotal = valorTotal.add(valorTotal.multiply(taxa.percentual())); // coloca o percentual
-            valorTotal = valorTotal.add(taxa.valorFixo()); // coloca o valor fixo da taxa
-        }
-        return valorTotal; //retorna o valor com as taxas
-
+        contaRepository.save(conta); //salva alterações na conta
+        return pagamentoRepository.save(pagamento); //saalva e retorna o pagamento processado
     }
-    public PagamentoResponseDTO criarPagamento(PagamentoRequestDTO request) { //metodo que o controller vai chamar, recebe a requisiçaõ do cliente e responde
-        Pagamento pagamento = new Pagamento();// assim cria a entidade
 
+
+    public PagamentoResponseDTO criarPagamento(PagamentoRequestDTO request) {
+
+        Pagamento pagamento = new Pagamento(); //cria o objeto de pagamento e preenche com as requisições
 
         pagamento.setConta(request.conta());
         pagamento.setDescricaoPagamento(request.descricaoPagamento());
-        pagamento.setValorPago(new BigDecimal(request.valorPago())); //converte de string para big decimal
-        pagamento.setDataVencimento(LocalDateTime.parse(request.dataVencimento())); //converte string para localdatetime
-        pagamento.setStatus(StatusPagamento.PENDENTE); //define o pagamento como pendente primeiro
+        pagamento.setValorPago(new BigDecimal(request.valorPago()));
+        pagamento.setDataVencimento(LocalDateTime.parse(request.dataVencimento()));
+        pagamento.setStatus(StatusPagamento.PENDENTE);
+        pagamento.setTipoPagamento(request.tipoPagamento());
 
-        pagamento.setTipoPagamento(request.tipoPagamento()); //define o tipo de pagamento
+        Pagamento salvo = pagamentoRepository.save(pagamento); //salva o pagamento no banco
 
-
-        Pagamento salvo = pagamentoRepository.save(pagamento); //salva no banco
-
-
-        return new PagamentoResponseDTO(
+        return new PagamentoResponseDTO( //retorna um dto de resposta com os dados do pagamento
                 salvo.getId(),
                 salvo.getConta(),
                 salvo.getDescricaoPagamento(),
                 salvo.getValorPago().toString(),
                 salvo.getDataVencimento().toString()
-        ); // converte a entidade para um dto de resposta, para nao expor detalhes da entidade e dar ao cliente apenas os dados necessario
+        );
     }
 
 
-
-    public List<PagamentoResponseDTO> listarPagamentos() {
+    public List<PagamentoResponseDTO> listarPagamentos() { //lista todos os pagamentos cadastrados no sistema
         return pagamentoRepository.findAll().stream()
                 .map(p -> new PagamentoResponseDTO(
                         p.getId(),
@@ -73,12 +72,13 @@ public class  PagamentoService {
                         p.getDataVencimento().toString()
                 ))
                 .toList();
-    }// busca os pagamentos, converte em DTO, e retorna uma lista
+    }
 
 
     public PagamentoResponseDTO buscarPagamentoPorId(String id) {
+
         Pagamento pagamento = pagamentoRepository.findById(id)
-                .orElseThrow(() -> new PagamentoNaoEncontradoException(id.toString())); //busca o pagamento
+                .orElseThrow(() -> new PagamentoNaoEncontradoException(id));
 
         return new PagamentoResponseDTO(
                 pagamento.getId(),
@@ -92,8 +92,8 @@ public class  PagamentoService {
 
     public void deletarPagamento(String id) {
         if (!pagamentoRepository.existsById(id)) {
-            throw new PagamentoNaoEncontradoException(id.toString());
+            throw new PagamentoNaoEncontradoException(id);
         }
-        pagamentoRepository.deleteById(id); //verifica se o pagamento existe
+        pagamentoRepository.deleteById(id);
     }
 }

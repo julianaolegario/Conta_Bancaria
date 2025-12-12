@@ -54,7 +54,7 @@ public class  PagamentoController {
                     @ApiResponse(responseCode = "400", description = "Dados inválidos enviados")
             }
     )
-    @PostMapping
+    @PostMapping // endpoint para criar um pagamento, valida o DTO enviado pelo cliente e delega a criação ao serviço, retorna 201 Created com o pagamento criado.
     public ResponseEntity<PagamentoResponseDTO> criarPagamento(
             @Valid @RequestBody PagamentoRequestDTO pagamentoRequestDTO) {
 
@@ -68,7 +68,7 @@ public class  PagamentoController {
             description = "Retorna a lista completa de pagamentos cadastrados",
             responses = @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
     )
-    @GetMapping
+    @GetMapping   // endpoint para listar todos os pagamentos, retorna 200 OK com a lista de pagamentos.
     public ResponseEntity<List<PagamentoResponseDTO>> listarPagamentos() {
         return ResponseEntity.ok(pagamentoService.listarPagamentos());
     }
@@ -82,7 +82,7 @@ public class  PagamentoController {
                     @ApiResponse(responseCode = "404", description = "Pagamento não encontrado")
             }
     )
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // endpoint para buscar um pagamento específico pelo ID, retorna 200 OK se encontrado, 404 se não existir.
     public ResponseEntity<PagamentoResponseDTO> buscarPagamentoPorId(@PathVariable String id) {
         return ResponseEntity.ok(pagamentoService.buscarPagamentoPorId(id));
     }
@@ -96,7 +96,7 @@ public class  PagamentoController {
                     @ApiResponse(responseCode = "404", description = "Pagamento não encontrado")
             }
     )
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // endpoint para remover um pagamento pelo ID, retorna 204 No Content para indicar que a exclusão foi bem-sucedida.
     public ResponseEntity<Void> deletarPagamento(@PathVariable String id) {
         pagamentoService.deletarPagamento(id);
         return ResponseEntity.noContent().build();
